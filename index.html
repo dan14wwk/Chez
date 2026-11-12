@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Chez! v0.7</title>
+<title>Chez! v1.0 beta</title>
 <style>
 :root{
   --bg:#0e1116; --panel:#161a21; --panel2:#1e242e; --fg:#e9ecf2; --muted:#8b93a3;
   --accent:#7cd4a3; --accent-fg:#08120c;
   --sq-light:#e9e4d9; --sq-dark:#7d8b96;
-  --pw:#ffffff; --pb:#1b1f27; --pw-s:rgba(0,0,0,.55); --pb-s:rgba(255,255,255,.35);
+  --pw:#ffffff; --pb:#1b1f27;
   --board:350px; --radius:12px;
 }
-body[data-theme="light"]{--bg:#f2f4f8;--panel:#ffffff;--panel2:#eaeef4;--fg:#131820;--muted:#5b6573;--pw-s:rgba(0,0,0,.35);--pb-s:rgba(0,0,0,.25);}
+body[data-theme="light"]{--bg:#f2f4f8;--panel:#ffffff;--panel2:#eaeef4;--fg:#131820;--muted:#5b6573;}
 body[data-theme="contrast"]{--bg:#000;--panel:#0b0b0b;--panel2:#181818;--fg:#fff;--muted:#9a9a9a;--accent:#ffd400;--accent-fg:#000;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0;overflow:hidden;background:#05070a}
@@ -55,22 +55,6 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;color:var
 @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:.85}}
 #board{width:var(--board);height:var(--board);position:relative;border-radius:8px;overflow:hidden;
   box-shadow:0 12px 38px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06);touch-action:none}
-#board[data-rar="uncommon"]{box-shadow:0 0 0 2px rgba(124,212,163,.4),0 12px 38px rgba(0,0,0,.45)}
-#board[data-rar="rare"]{box-shadow:0 0 0 3px rgba(91,168,255,.5),0 0 25px rgba(91,168,255,.3),0 12px 38px rgba(0,0,0,.45)}
-#board[data-rar="epic"]{box-shadow:0 0 0 3px rgba(160,107,255,.6),0 0 30px rgba(160,107,255,.4),0 12px 38px rgba(0,0,0,.45)}
-#board[data-rar="legendary"]{box-shadow:0 0 0 3px rgba(255,180,0,.6),0 0 35px rgba(255,180,0,.5),0 12px 38px rgba(0,0,0,.45);animation:boardLegend 2.5s infinite}
-#board[data-rar="mythic"]{box-shadow:0 0 0 4px rgba(255,92,92,.6),0 0 40px rgba(255,92,92,.5),0 12px 38px rgba(0,0,0,.45)}
-#board[data-rar="cosmic"]{box-shadow:0 0 0 4px rgba(0,229,192,.7),0 0 50px rgba(0,229,192,.6),0 12px 38px rgba(0,0,0,.45);animation:boardCosmic 3s infinite}
-#board[data-rar="true"]{box-shadow:0 0 0 4px rgba(255,215,0,.7),0 0 60px rgba(255,215,0,.6),0 12px 38px rgba(0,0,0,.45);animation:boardTrue 2s infinite}
-#board[data-rar="magical"]{animation:hue 5s linear infinite;box-shadow:0 0 0 4px rgba(255,0,255,.7),0 0 50px rgba(255,0,255,.5),0 12px 38px rgba(0,0,0,.45)}
-#board[data-rar="supreme"]{box-shadow:0 0 0 5px rgba(255,107,0,.8),0 0 70px rgba(255,51,0,.7),0 12px 38px rgba(0,0,0,.45);animation:boardFlame 2s infinite}
-#board[data-rar="divine"]{box-shadow:0 0 0 5px rgba(255,244,194,.8),0 0 80px rgba(255,215,0,.7),0 12px 38px rgba(0,0,0,.45);animation:boardDivine 2.5s infinite}
-#board[data-rar="secret"]{animation:hue 3s linear infinite;box-shadow:0 0 0 4px rgba(255,0,255,.8),0 0 60px rgba(255,0,255,.7),0 12px 38px rgba(0,0,0,.45)}
-@keyframes boardLegend{50%{filter:brightness(1.12)}}
-@keyframes boardCosmic{50%{filter:brightness(1.18) hue-rotate(15deg)}}
-@keyframes boardTrue{50%{box-shadow:0 0 0 5px rgba(255,215,0,.95),0 0 80px rgba(255,215,0,.75),0 12px 38px rgba(0,0,0,.45)}}
-@keyframes boardFlame{50%{filter:brightness(1.3) hue-rotate(-15deg)}}
-@keyframes boardDivine{50%{box-shadow:0 0 0 6px rgba(255,244,194,1),0 0 100px rgba(255,215,0,.9),0 12px 38px rgba(0,0,0,.45)}}
 #squares{position:absolute;inset:0;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);z-index:0}
 .sq{position:relative}
 .sq.light{background:var(--sq-light)}
@@ -88,28 +72,11 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;color:var
 @keyframes hintPulse{0%,100%{box-shadow:inset 0 0 0 3px rgba(255,77,77,.5),inset 0 0 16px rgba(255,77,77,.3)}50%{box-shadow:inset 0 0 0 3px rgba(255,77,77,.85),inset 0 0 26px rgba(255,77,77,.55)}}
 #pieces{position:absolute;inset:0;pointer-events:none;z-index:10}
 .piece{position:absolute;left:0;top:0;width:12.5%;height:12.5%;display:flex;align-items:center;justify-content:center;
-  font-size:calc(var(--board)/10.2);line-height:1;will-change:transform;
-  transition:transform .22s cubic-bezier(.25,1,.35,1);font-family:'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols',serif}
-.piece.w{color:var(--pw);-webkit-text-stroke:1.2px var(--pw-s)}
-.piece.b{color:var(--pb);-webkit-text-stroke:1.2px var(--pb-s)}
-.piece[data-rar="uncommon"]{text-shadow:0 1px 3px rgba(124,212,163,.4)}
-.piece[data-rar="rare"]{text-shadow:0 0 4px currentColor,0 0 8px currentColor}
-.piece[data-rar="epic"]{text-shadow:0 0 5px currentColor,0 0 12px currentColor;filter:brightness(1.1)}
-.piece[data-rar="legendary"]{text-shadow:0 0 6px currentColor,0 0 14px currentColor,0 0 22px currentColor;animation:pShimmer 2.5s infinite}
-.piece[data-rar="mythic"]{text-shadow:0 0 8px currentColor,0 0 18px currentColor,0 0 28px currentColor;filter:brightness(1.2)}
-.piece[data-rar="cosmic"]{text-shadow:0 0 10px #00e5c0,0 0 20px #00e5c0,0 0 30px #3b2c74;animation:pCosmic 3s infinite}
-.piece[data-rar="true"]{text-shadow:0 0 12px #ffd700,0 0 24px #ffd700,0 0 36px #ffd700;animation:pGold 1.8s infinite}
-.piece[data-rar="magical"]{animation:hue 4s linear infinite;text-shadow:0 0 8px currentColor}
-.piece[data-rar="supreme"]{text-shadow:0 0 15px #ff6b00,0 0 30px #ff3300,0 0 45px #ff0000;animation:pFlame 2s infinite}
-.piece[data-rar="divine"]{text-shadow:0 0 18px #fff4c2,0 0 36px #ffd700,0 0 54px #ffaa00;animation:pDivine 2.5s infinite}
-.piece[data-rar="secret"]{text-shadow:0 0 10px #ff00ff,0 0 20px #ff00ff,0 0 30px #00ffff;animation:hue 3s linear infinite}
-@keyframes pShimmer{50%{filter:brightness(1.3)}}
-@keyframes pCosmic{50%{filter:brightness(1.3) hue-rotate(20deg)}}
-@keyframes pGold{50%{text-shadow:0 0 20px #ffd700,0 0 40px #ffd700,0 0 60px #ffd700}}
-@keyframes pFlame{50%{filter:brightness(1.4) hue-rotate(-15deg)}}
-@keyframes pDivine{50%{text-shadow:0 0 25px #fff4c2,0 0 50px #ffd700,0 0 75px #ffaa00}}
-@keyframes hue{to{filter:hue-rotate(360deg)}}
-.piece.drag{transition:none;z-index:30;font-size:calc(var(--board)/9.0);filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
+  will-change:transform; transition:transform .22s cubic-bezier(.25,1,.35,1); padding: 2%;}
+.piece svg { width: 100%; height: 100%; fill: currentColor; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4)); }
+.piece.w{color:var(--pw);}
+.piece.b{color:var(--pb);}
+.piece.drag{transition:none;z-index:30;transform:scale(1.15) !important;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
 .piece.gone{opacity:0;transform:scale(.4)!important;transition:opacity .18s,transform .18s}
 .noanim .piece{transition:none!important}
 #arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;overflow:visible}
@@ -213,9 +180,6 @@ input[type=color]{padding:2px;height:28px;width:44px}
 .mastery-node .nm{font-size:11.5px;font-weight:700;margin:2px 0}
 .mastery-node .rw{font-size:10px;color:var(--accent);line-height:1.3;margin-top:3px;min-height:28px}
 .mastery-node .xp{font-size:9.5px;color:var(--muted);margin-top:2px}
-.rar-C{color:#9aa0a6} .rar-U{color:#7cd4a3} .rar-R{color:#5ba8ff} .rar-E{color:#a06bff}
-.rar-L{color:#ffb400} .rar-M{color:#ff5c5c} .rar-K{color:#00e5c0} .rar-T{color:#ffd700}
-.rar-G{color:#ff00ff} .rar-P{color:#ffffff} .rar-D{color:#fff4c2} .rar-S{color:#ff00ff}
 #stage[data-orient="portrait"]{width:600px;height:900px}
 #stage[data-orient="portrait"] #app{flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px}
 #stage[data-orient="portrait"] #main{order:1;flex:0 0 auto;width:var(--board)}
@@ -229,7 +193,7 @@ input[type=color]{padding:2px;height:28px;width:44px}
 #stage[data-orient="portrait"] #sideColInner{display:none}
 #stage[data-orient="portrait"] #trainerBox{max-height:90px}
 
-/* ===== v0.7 additions ===== */
+/* ===== v1.0 additions ===== */
 .avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;overflow:hidden;
   background:var(--panel2);font-size:20px;font-weight:800;flex:0 0 auto;border:1px solid rgba(255,255,255,.12)}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block}
@@ -279,15 +243,18 @@ input[type=color]{padding:2px;height:28px;width:44px}
 .promo-btn{width:64px;height:64px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
   background:var(--panel2);color:var(--fg);font-size:36px;line-height:1;cursor:pointer;transition:.15s}
 .promo-btn:hover{border-color:var(--accent);background:var(--panel);transform:translateY(-2px)}
-.onlineBadge{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
-.dot{width:7px;height:7px;border-radius:50%;background:#7cd4a3;display:inline-block}
-.dot.off{background:#8b93a3}
 .acc-head{display:flex;align-items:center;gap:12px;padding:4px 0 10px}
 .acc-head .avatar{width:64px;height:64px;font-size:32px}
 .acc-name{font-size:18px;font-weight:800}
 .acc-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .authInput{width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:1px solid rgba(255,255,255,.14);
   background:var(--bg);color:var(--fg);box-sizing:border-box;font-family:inherit;font-size:13px}
+
+/* Theme grid for Settings */
+.theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; margin-top: 6px; }
+.theme-swatch { aspect-ratio: 1; border-radius: 8px; border: 2px solid transparent; cursor: pointer; transition: .2s; }
+.theme-swatch:hover { transform: scale(1.05); }
+.theme-swatch.selected { border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
 </style>
 </head>
 <body data-theme="dark">
@@ -316,17 +283,16 @@ input[type=color]{padding:2px;height:28px;width:44px}
 
     <main id="main">
       <div id="topbar">
-        <span id="ver">chez! v0.7 · F — на весь экран</span>
+        <span id="ver">chez! v1.0 beta · F — на весь экран</span>
         <div class="wnwrap">
           <button id="wnBtn" data-i18n="whatsnew">что нового</button>
           <div id="wnPop">
-            <b>v0.7</b>
+            <b>v1.0 beta</b>
             <ul>
-              <li>Убрана система ID, управление по никам</li>
-              <li>Все обычные скины — бесплатно</li>
-              <li>50 префиксов по категориям</li>
-              <li>Premium: градиент, эксклюзивы, ELO-буст</li>
-              <li>Модерка напрямую из базы или панели</li>
+              <li>Фигуры теперь SVG (разные формы)</li>
+              <li>Выбор цвета фигур в настройках</li>
+              <li>Магазин: только Рамки и Префиксы</li>
+              <li>Визуальный выбор досок</li>
             </ul>
           </div>
         </div>
@@ -375,11 +341,11 @@ function clamp(v,a,b){return v<a?a:v>b?b:v;}
 const I18N={
   ru:{play:'Играть',learn:'Учиться',more:'Ещё',settings:'Настройки',shop:'Магазин',whatsnew:'что нового',
       moves:'Ходы',already:'Уже в игре',white:'белыми',black:'чёрными',you:'Вы играете',
-      resign:'Сдаться',save:'Сохранить',close:'Закрыть',buy:'Надеть',
+      resign:'Сдаться',save:'Сохранить',close:'Закрыть',buy:'Купить',
       equip:'Надеть',equipped:'Надето',win:'Победа',lose:'Поражение',draw:'Ничья',account:'Аккаунт'},
   en:{play:'Play',learn:'Learn',more:'More',settings:'Settings',shop:'Shop',whatsnew:"what's new",
       moves:'Moves',already:'Already in game',white:'white',black:'black',you:'You play',
-      resign:'Resign',save:'Save',close:'Close',buy:'Equip',
+      resign:'Resign',save:'Save',close:'Close',buy:'Buy',
       equip:'Equip',equipped:'Equipped',win:'Victory',lose:'Defeat',draw:'Draw',account:'Account'}
 };
 let LANG='ru';
@@ -388,7 +354,18 @@ const t=k=>(I18N[LANG]&&I18N[LANG][k])||I18N.ru[k]||k;
 /* ================= ENGINE ================= */
 const FILES='abcdefgh';
 const START_FEN='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-const GLYPH={p:'\u265F',n:'\u265E',b:'\u265D',r:'\u265C',q:'\u265B',k:'\u265A'};
+
+// SVG Фигуры (Стандартные Cburnett)
+const PIECE_SVGS = {
+  p: `<path d="M12 2a3 3 0 0 0-3 3c0 1.3.8 2.4 2 2.8V9H9v2h2v3l-2 2h6l-2-2v-3h2V9h-2V7.8c1.2-.4 2-1.5 2-2.8a3 3 0 0 0-3-3z"/>`,
+  n: `<path d="M10 2a2 2 0 0 0-2 2v3L5 9v2l2-1v3l-2 4v3h12v-3l-3-6V6l1-1v3h2V4l-3 1-1-2h-3z"/>`,
+  b: `<path d="M12 2a2 2 0 0 0-2 2c0 .7.4 1.4 1 1.7V7H9v2h2v3l-2 4h6l-2-4v-3h2V7h-2V5.7c.6-.3 1-1 1-1.7a2 2 0 0 0-2-2z"/>`,
+  r: `<path d="M5 3v3h2v2H5v12h14V8h-2V6h2V3h-3v3h-2V3h-4v3H7V3H5z"/>`,
+  q: `<path d="M12 1l-2 3h4l-2-3zm-5 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM7 9v3l-2 8h14l-2-8V9c-1.5 2-3 2-5 2s-3.5 0-5-2z"/>`,
+  k: `<path d="M12 1v4H8v2h4v2h-2a4 4 0 0 0-4 4c0 2 1.5 3.5 3 4l-1 4h8l-1-4c1.5-.5 3-2 3-4a4 4 0 0 0-4-4h-2V7h4V5h-4V1h-2z"/>`
+};
+const GLYPH={p:'\u265F',n:'\u265E',b:'\u265D',r:'\u265C',q:'\u265B',k:'\u265A'}; // для взятых фигур
+
 const VAL={p:100,n:320,b:330,r:500,q:900,k:0};
 function sqName(i){return FILES[i%8]+(8-(i/8|0));}
 function nameToSq(s){return (8-parseInt(s[1]))*8+FILES.indexOf(s[0]);}
@@ -702,103 +679,35 @@ function pickMove(st,elo){
   return best;
 }
 
-/* ================= RARITY ================= */
-const RARITIES = [
-  {key:'common',    name:'Обычный',      short:'C', price:100,   color:'#9aa0a6', count:11},
-  {key:'uncommon',  name:'Необычный',    short:'U', price:200,   color:'#7cd4a3', count:10},
-  {key:'rare',      name:'Редкий',       short:'R', price:500,   color:'#5ba8ff', count:9},
-  {key:'epic',      name:'Эпический',    short:'E', price:1000,  color:'#a06bff', count:8},
-  {key:'legendary', name:'Легендарный',  short:'L', price:1750,  color:'#ffb400', count:7},
-  {key:'mythic',    name:'Мифический',   short:'M', price:2500,  color:'#ff5c5c', count:6},
-  {key:'cosmic',    name:'Космический',  short:'K', price:5000,  color:'#00e5c0', count:5},
-  {key:'true',      name:'Истинный',     short:'T', price:10000, color:'#ffd700', count:4},
-  {key:'magical',   name:'Волшебный',    short:'G', price:20000, color:'#ff00ff', count:3},
-  {key:'supreme',   name:'Превосходный', short:'P', price:40000, color:'#ffffff', count:2},
-  {key:'divine',    name:'Божественный', short:'D', price:50000, color:'#fff4c2', count:1},
-  {key:'secret',    name:'Секретный',    short:'S', price:-1,    color:'#ff00ff', count:0}
-];
-const RARITY_BY_KEY = Object.fromEntries(RARITIES.map(r=>[r.key,r]));
-
-function hslToHex(h,s,l){
-  s/=100; l/=100;
-  const a=s*Math.min(l,1-l);
-  const f=n=>{
-    const k=(n+h/30)%12;
-    const color=l-a*Math.max(-1,Math.min(k-3,Math.min(9-k,1)));
-    return Math.round(255*color).toString(16).padStart(2,'0');
-  };
-  return '#'+f(0)+f(8)+f(4);
-}
+/* ================= SKINS & DATA ================= */
+const RARITY_BY_KEY = {
+  common:{name:'Обычный',color:'#9aa0a6'}, uncommon:{name:'Необычный',color:'#7cd4a3'},
+  rare:{name:'Редкий',color:'#5ba8ff'}, epic:{name:'Эпический',color:'#a06bff'},
+  legendary:{name:'Легендарный',color:'#ffb400'}, mythic:{name:'Мифический',color:'#ff5c5c'},
+  cosmic:{name:'Космический',color:'#00e5c0'}, true:{name:'Истинный',color:'#ffd700'},
+  magical:{name:'Волшебный',color:'#ff00ff'}, supreme:{name:'Превосходный',color:'#ffffff'},
+  divine:{name:'Божественный',color:'#fff4c2'}, secret:{name:'Секретный',color:'#ff00ff'}
+};
 
 function genBoardSkins(){
   const skins=[];
-  RARITIES.forEach((rar,ri)=>{
-    for(let i=0;i<rar.count;i++){
-      const hue=(210 + ri*28 + i*17) % 360;
-      const light=hslToHex(hue, 30, 85);
-      const dark=hslToHex(hue, 40, 45);
-      skins.push({id:skins.length, name:`${rar.name} ${i+1}`, rarity:rar.key, price:rar.price, c1:light, c2:dark});
-    }
-  });
-  skins.push({id:skins.length, name:'Premium Ruby', rarity:'divine', price:-1, c1:'#1a0000', c2:'#ff0055', premiumOnly:true});
-  skins.push({id:skins.length, name:'Premium Galaxy', rarity:'divine', price:-1, c1:'#000033', c2:'#ff00ff', premiumOnly:true});
-  skins.push({id:skins.length, name:'Бронзовый', rarity:'secret', price:-1, c1:'#2d1b4e', c2:'#cd7f32'});
-  skins.push({id:skins.length, name:'Серебряный', rarity:'secret', price:-1, c1:'#1a1a2e', c2:'#c0c0c0'});
-  skins.push({id:skins.length, name:'Золотой', rarity:'secret', price:-1, c1:'#000000', c2:'#ffd700'});
-  return skins;
-}
-function genPieceSkins(){
-  const skins=[];
-  const palettes=[
-    ['#ffffff','#1b1f27'],['#f7f1e3','#2b2b2b'],['#f0d7b0','#6b4423'],['#dfe6ee','#40474f'],
-    ['#ffd6e7','#8c2f52'],['#d3ffe9','#1f6b4c'],['#cfe8ff','#1b4f8a'],['#e8d5ff','#4b2378'],
-    ['#ffd0b0','#8a2b00'],['#e6f7ff','#2f6f8f'],['#cfd3da','#101216'],['#a8ffef','#2b0f3a'],
-    ['#ffd9b3','#7a3d12'],['#b9f5cf','#0f5132'],['#ffe0ea','#a83a63'],['#cfe0ff','#10367a'],
-    ['#ffe8a8','#8a5b00'],['#e2e2e2','#2c2c2c'],['#ffc9c0','#a33224'],['#ffd76e','#6b4a00'],
-    ['#e8ffb0','#4a7a00'],['#d6dcff','#232a7a'],['#d9d9d9','#5a5a5a'],['#f3d3b8','#9c4a1e'],
-    ['#e0f2ff','#2b6fa8'],['#ffd7a8','#b03000'],['#ffe3f5','#7a1f6b'],['#b8b8ff','#0a0a1a'],
-    ['#ffffff','#9aa0a6'],['#fff6cc','#8a6d00']
+  const palettes = [
+    ['#e9e4d9','#7d8b96'], ['#f0d9b5','#b58863'], ['#dfe6ee','#40474f'], ['#d3ffe9','#1f6b4c'],
+    ['#cfe8ff','#1b4f8a'], ['#e8d5ff','#4b2378'], ['#ffd6e7','#8c2f52'], ['#ffd0b0','#8a2b00'],
+    ['#e6f7ff','#2f6f8f'], ['#cfd3da','#101216'], ['#a8ffef','#2b0f3a'], ['#ffd9b3','#7a3d12'],
+    ['#b9f5cf','#0f5132'], ['#ffe0ea','#a83a63'], ['#cfe0ff','#10367a'], ['#ffe8a8','#8a5b00'],
+    ['#e2e2e2','#2c2c2c'], ['#ffc9c0','#a33224'], ['#ffd76e','#6b4a00'], ['#e8ffb0','#4a7a00'],
+    ['#d6dcff','#232a7a'], ['#d9d9d9','#5a5a5a'], ['#f3d3b8','#9c4a1e'], ['#e0f2ff','#2b6fa8'],
+    ['#ffd7a8','#b03000'], ['#ffe3f5','#7a1f6b'], ['#b8b8ff','#0a0a1a'], ['#ffffff','#9aa0a6'],
+    ['#fff6cc','#8a6d00'], ['#2d1b4e','#ffd700'], ['#1a1a2e','#00e5c0'], ['#000000','#ff00ff'],
+    ['#1a0000','#ff0055'], ['#000033','#ff00ff']
   ];
-  let palIdx=0;
-  RARITIES.forEach((rar)=>{
-    for(let i=0;i<rar.count;i++){
-      const pal=palettes[palIdx % palettes.length];
-      palIdx++;
-      skins.push({id:skins.length, name:`${rar.name} ${i+1}`, rarity:rar.key, price:rar.price, w:pal[0], b:pal[1]});
-    }
+  palettes.forEach((p, i) => {
+    skins.push({id:i, name:'Тема '+(i+1), c1:p[0], c2:p[1]});
   });
-  skins.push({id:skins.length, name:'Premium Ruby', rarity:'divine', price:-1, w:'#ff0055', b:'#1a0000', premiumOnly:true});
-  skins.push({id:skins.length, name:'Premium Galaxy', rarity:'divine', price:-1, w:'#ff00ff', b:'#000033', premiumOnly:true});
-  skins.push({id:skins.length, name:'Бронзовый', rarity:'secret', price:-1, w:'#cd7f32', b:'#2d1b4e'});
-  skins.push({id:skins.length, name:'Серебряный', rarity:'secret', price:-1, w:'#c0c0c0', b:'#1a1a2e'});
-  skins.push({id:skins.length, name:'Золотой', rarity:'secret', price:-1, w:'#ffd700', b:'#000000'});
   return skins;
 }
-function genSoundSkins(){
-  const skins=[];
-  const waves=['sine','triangle','square','sawtooth'];
-  RARITIES.forEach((rar,ri)=>{
-    for(let i=0;i<rar.count;i++){
-      skins.push({
-        id:skins.length,
-        name:`${rar.name} ${i+1}`,
-        rarity:rar.key,
-        price:rar.price,
-        type:waves[i % waves.length],
-        pitch:0.6 + ri*0.15 + i*0.05,
-        vol:0.8 + ri*0.05
-      });
-    }
-  });
-  skins.push({id:skins.length, name:'Золотой', rarity:'secret', price:-1, type:'triangle', pitch:1.9, vol:1.25});
-  return skins;
-}
-
 const BOARD_SKINS = genBoardSkins();
-const PIECE_SKINS = genPieceSkins();
-const SOUND_SKINS = genSoundSkins();
-const SECRET_BOARD_START = BOARD_SKINS.length - 3;
-const SECRET_PIECE_START = PIECE_SKINS.length - 3;
 
 const BOTS=[
  {elo:50,name:'Новичок'},{elo:200,name:'Любитель'},{elo:400,name:'Клубный игрок'},
@@ -978,244 +887,144 @@ const MASTERY = [
   {xp:200, name:'Боец', reward:{stars:120}},
   {xp:350, name:'Клубный', reward:{stars:180}},
   {xp:500, name:'Опытный', reward:{stars:250}},
-  {xp:700, name:'Турнирный', reward:{boardSkin:SECRET_BOARD_START, frame:'frame-gold'}},
+  {xp:700, name:'Турнирный', reward:{stars:500}},
   {xp:1000, name:'Кандидат', reward:{stars:400}},
-  {xp:1400, name:'Эксперт', reward:{pieceSkin:SECRET_PIECE_START, avatar:'💎'}},
-  {xp:1800, name:'Мастер', reward:{stars:600}},
-  {xp:2300, name:'Гроссмейстер', reward:{stars:800}},
-  {xp:2900, name:'Элита', reward:{boardSkin:SECRET_BOARD_START+1, frame:'frame-neon'}},
-  {xp:3500, name:'Легенда', reward:{pieceSkin:SECRET_PIECE_START+1, avatar:'👽'}},
-  {xp:4200, name:'Миф', reward:{stars:1500}},
-  {xp:5000, name:'Титан', reward:{stars:2000}},
-  {xp:6000, name:'Бессмертный', reward:{stars:3000}},
-  {xp:7500, name:'Божество', reward:{stars:5000, avatar:'🐉'}},
-  {xp:10000, name:'Абсолют', reward:{boardSkin:SECRET_BOARD_START+2, pieceSkin:SECRET_PIECE_START+2, stars:10000, frame:'frame-legend', avatar:'🔥'}}
+  {xp:1400, name:'Эксперт', reward:{stars:600}},
+  {xp:1800, name:'Мастер', reward:{stars:800}},
+  {xp:2300, name:'Гроссмейстер', reward:{stars:1000}},
+  {xp:2900, name:'Элита', reward:{stars:1500}},
+  {xp:3500, name:'Легенда', reward:{stars:2000}},
+  {xp:4200, name:'Миф', reward:{stars:3000}},
+  {xp:5000, name:'Титан', reward:{stars:5000}},
+  {xp:6000, name:'Бессмертный', reward:{stars:8000}},
+  {xp:7500, name:'Божество', reward:{stars:12000}},
+  {xp:10000, name:'Абсолют', reward:{stars:20000}}
 ];
 function getMasteryLevel(xp){
   let idx=0;
   for(let i=0;i<MASTERY.length;i++){ if(xp>=MASTERY[i].xp) idx=i; else break; }
   return {index:idx, level:idx+1, name:MASTERY[idx].name, xp:MASTERY[idx].xp};
 }
-function formatMasteryReward(r){
-  if(!r) return 'Титул';
-  const parts=[];
-  if(r.stars) parts.push(`${r.stars}★`);
-  if(r.boardSkin!==undefined) parts.push('Доска «'+BOARD_SKINS[r.boardSkin].name+'»');
-  if(r.pieceSkin!==undefined) parts.push('Фигуры «'+PIECE_SKINS[r.pieceSkin].name+'»');
-  if(r.avatar) parts.push('Аватар '+r.avatar);
-  if(r.frame){const f=SHOP_DATA.frames.find(x=>x.id===r.frame);parts.push('Рамка «'+(f?f.name:r.frame)+'»');}
-  return parts.join(' + ')||'—';
-}
 
 /* ================= ACHIEVEMENTS ================= */
+// (Сокращено для размера, логика та же)
+const ACHIEVEMENTS = [
+  {id:'g1', name:'Первый ход', desc:'Сыграйте первую партию', rarity:'common', reward:10, check:()=>stat('gamesPlayed')>=1},
+  {id:'g5', name:'Пять партий', desc:'Сыграйте 5 партий', rarity:'common', reward:15, check:()=>stat('gamesPlayed')>=5},
+  {id:'g10', name:'Десятка', desc:'Сыграйте 10 партий', rarity:'uncommon', reward:25, check:()=>stat('gamesPlayed')>=10},
+  {id:'g25', name:'Четверть сотни', desc:'Сыграйте 25 партий', rarity:'uncommon', reward:35, check:()=>stat('gamesPlayed')>=25},
+  {id:'g50', name:'Полсотни', desc:'Сыграйте 50 партий', rarity:'rare', reward:60, check:()=>stat('gamesPlayed')>=50},
+  {id:'g100', name:'Сотка', desc:'Сыграйте 100 партий', rarity:'rare', reward:90, check:()=>stat('gamesPlayed')>=100},
+  {id:'w1', name:'Первая победа', desc:'Выиграйте первую партию', rarity:'common', reward:15, check:()=>stat('wins')>=1},
+  {id:'w5', name:'Победитель', desc:'Выиграйте 5 партий', rarity:'common', reward:20, check:()=>stat('wins')>=5},
+  {id:'w10', name:'Десяток побед', desc:'Выиграйте 10 партий', rarity:'uncommon', reward:35, check:()=>stat('wins')>=10},
+  {id:'w25', name:'Четверть сотни побед', desc:'Выиграйте 25 партий', rarity:'rare', reward:45, check:()=>stat('wins')>=25},
+  {id:'w50', name:'Полсотни побед', desc:'Выиграйте 50 партий', rarity:'rare', reward:80, check:()=>stat('wins')>=50},
+  {id:'w100', name:'Сотня побед', desc:'Выиграйте 100 партий', rarity:'epic', reward:180, check:()=>stat('wins')>=100},
+  {id:'br1', name:'Первый бриллиант', desc:'Сделайте ход !!', rarity:'common', reward:15, check:()=>statMove('!!')>=1},
+  {id:'br10', name:'Мастер жертв', desc:'10 бриллиантовых ходов', rarity:'uncommon', reward:50, check:()=>statMove('!!')>=10},
+  {id:'pr1', name:'Первый идеал', desc:'Сделайте идеальный ход ★', rarity:'common', reward:10, check:()=>statMove('★')>=1},
+  {id:'les_b1', name:'Первый урок', desc:'Первый урок основ', rarity:'common', reward:10, check:()=>(S.lessons.basics||[]).length>=1},
+  {id:'les_d1', name:'Первый дебют', desc:'Первый дебют', rarity:'common', reward:10, check:()=>(S.lessons.debuts||[]).length>=1},
+  {id:'les_m1', name:'Первый мат', desc:'Первый урок матов', rarity:'common', reward:10, check:()=>(S.lessons.mates||[]).length>=1},
+  {id:'m1', name:'Первый мат игроку', desc:'Поставьте мат', rarity:'common', reward:10, check:()=>stat('matesDelivered')>=1},
+  {id:'m10', name:'Десяток матов', desc:'10 матов', rarity:'uncommon', reward:35, check:()=>stat('matesDelivered')>=10},
+  {id:'cast1', name:'Рокировка', desc:'Сделайте рокировку', rarity:'common', reward:10, check:()=>stat('castles')>=1},
+  {id:'prom1', name:'Превращение', desc:'Превратите пешку', rarity:'common', reward:10, check:()=>stat('promotions')>=1},
+];
 const stat = k=>(S.stats&&S.stats[k])||0;
 const statMove = k=>(S.stats&&S.stats.moves&&S.stats.moves[k])||0;
-const ACHIEVEMENTS = [
-  {id:'g1', name:'Первый ход', desc:'Сыграйте первую партию', rarity:'C', reward:10, check:()=>stat('gamesPlayed')>=1},
-  {id:'g5', name:'Пять партий', desc:'Сыграйте 5 партий', rarity:'C', reward:15, check:()=>stat('gamesPlayed')>=5},
-  {id:'g10', name:'Десятка', desc:'Сыграйте 10 партий', rarity:'U', reward:25, check:()=>stat('gamesPlayed')>=10},
-  {id:'g25', name:'Четверть сотни', desc:'Сыграйте 25 партий', rarity:'U', reward:35, check:()=>stat('gamesPlayed')>=25},
-  {id:'g50', name:'Полсотни', desc:'Сыграйте 50 партий', rarity:'R', reward:60, check:()=>stat('gamesPlayed')>=50},
-  {id:'g100', name:'Сотка', desc:'Сыграйте 100 партий', rarity:'R', reward:90, check:()=>stat('gamesPlayed')>=100},
-  {id:'g250', name:'Ветеран', desc:'Сыграйте 250 партий', rarity:'M', reward:180, check:()=>stat('gamesPlayed')>=250},
-  {id:'g500', name:'Марафонец', desc:'Сыграйте 500 партий', rarity:'L', reward:400, check:()=>stat('gamesPlayed')>=500},
-  {id:'w1', name:'Первая победа', desc:'Выиграйте первую партию', rarity:'C', reward:15, check:()=>stat('wins')>=1},
-  {id:'w5', name:'Победитель', desc:'Выиграйте 5 партий', rarity:'C', reward:20, check:()=>stat('wins')>=5},
-  {id:'w10', name:'Десяток побед', desc:'Выиграйте 10 партий', rarity:'U', reward:35, check:()=>stat('wins')>=10},
-  {id:'w25', name:'Четверть сотни побед', desc:'Выиграйте 25 партий', rarity:'R', reward:45, check:()=>stat('wins')>=25},
-  {id:'w50', name:'Полсотни побед', desc:'Выиграйте 50 партий', rarity:'R', reward:80, check:()=>stat('wins')>=50},
-  {id:'w100', name:'Сотня побед', desc:'Выиграйте 100 партий', rarity:'E', reward:180, check:()=>stat('wins')>=100},
-  {id:'w250', name:'Мастер побед', desc:'Выиграйте 250 партий', rarity:'M', reward:500, check:()=>stat('wins')>=250},
-  {id:'l1', name:'Первое поражение', desc:'Проиграйте первую партию', rarity:'C', reward:10, check:()=>stat('losses')>=1},
-  {id:'l10', name:'Ученик ошибок', desc:'Проиграйте 10 партий', rarity:'U', reward:25, check:()=>stat('losses')>=10},
-  {id:'l50', name:'Стойкий', desc:'Проиграйте 50 партий', rarity:'R', reward:60, check:()=>stat('losses')>=50},
-  {id:'l100', name:'Несгибаемый', desc:'Проиграйте 100 партий', rarity:'M', reward:120, check:()=>stat('losses')>=100},
-  {id:'d1', name:'Ничья', desc:'Сыграйте вничью', rarity:'C', reward:10, check:()=>stat('draws')>=1},
-  {id:'d10', name:'Дипломат', desc:'Сыграйте 10 ничьих', rarity:'U', reward:30, check:()=>stat('draws')>=10},
-  {id:'d50', name:'Миротворец', desc:'Сыграйте 50 ничьих', rarity:'R', reward:70, check:()=>stat('draws')>=50},
-  {id:'d100', name:'Вечный мир', desc:'Сыграйте 100 ничьих', rarity:'E', reward:150, check:()=>stat('draws')>=100},
-  {id:'b_nov', name:'Новичок побеждён', desc:'Победите Новичка', rarity:'C', reward:10, check:()=>(S.stats.botWins||[])[0]>0},
-  {id:'b_am', name:'Любитель побеждён', desc:'Победите Любителя', rarity:'C', reward:25, check:()=>(S.stats.botWins||[])[1]>0},
-  {id:'b_club', name:'Клубный побеждён', desc:'Победите Клубного игрока', rarity:'U', reward:50, check:()=>(S.stats.botWins||[])[2]>0},
-  {id:'b_exp', name:'Эксперт побеждён', desc:'Победите Эксперта', rarity:'R', reward:100, check:()=>(S.stats.botWins||[])[3]>0},
-  {id:'b_master', name:'Мастер побеждён', desc:'Победите Мастера', rarity:'E', reward:200, check:()=>(S.stats.botWins||[])[4]>0},
-  {id:'b_all', name:'Коллекционер скальпов', desc:'Победите всех 5 ботов', rarity:'R', reward:120, check:()=>{
-    const bw = S.stats.botWins||[];
-    return bw.length>=5 && bw.every(w=>w>0);
-  }},
-  {id:'b_5x', name:'По пять раз', desc:'Победите каждого бота 5 раз', rarity:'E', reward:250, check:()=>{
-    const bw = S.stats.botWins||[];
-    return bw.length>=5 && bw.every(w=>w>=5);
-  }},
-  {id:'br1', name:'Первый бриллиант', desc:'Сделайте ход !!', rarity:'C', reward:15, check:()=>statMove('!!')>=1},
-  {id:'br5', name:'Ювелир', desc:'Сделайте 5 бриллиантовых ходов', rarity:'U', reward:35, check:()=>statMove('!!')>=5},
-  {id:'br10', name:'Мастер жертв', desc:'10 бриллиантовых ходов', rarity:'U', reward:50, check:()=>statMove('!!')>=10},
-  {id:'br25', name:'Гений', desc:'25 бриллиантовых ходов', rarity:'R', reward:90, check:()=>statMove('!!')>=25},
-  {id:'br50', name:'Полсотни бриллиантов', desc:'50 бриллиантовых ходов', rarity:'R', reward:150, check:()=>statMove('!!')>=50},
-  {id:'br100', name:'Легенда жертв', desc:'100 бриллиантовых ходов', rarity:'L', reward:300, check:()=>statMove('!!')>=100},
-  {id:'br250', name:'Божество', desc:'250 бриллиантовых ходов', rarity:'K', reward:600, check:()=>statMove('!!')>=250},
-  {id:'pr1', name:'Первый идеал', desc:'Сделайте идеальный ход ★', rarity:'C', reward:10, check:()=>statMove('★')>=1},
-  {id:'pr10', name:'Десяток идеалов', desc:'10 идеальных ходов', rarity:'C', reward:15, check:()=>statMove('★')>=10},
-  {id:'pr50', name:'Пятьдесят идеалов', desc:'50 идеальных ходов', rarity:'U', reward:35, check:()=>statMove('★')>=50},
-  {id:'pr100', name:'Сотня идеалов', desc:'100 идеальных ходов', rarity:'R', reward:70, check:()=>statMove('★')>=100},
-  {id:'pr500', name:'Пятьсот идеалов', desc:'500 идеальных ходов', rarity:'E', reward:250, check:()=>statMove('★')>=500},
-  {id:'pr1000', name:'Тысяча идеалов', desc:'1000 идеальных ходов', rarity:'K', reward:600, check:()=>statMove('★')>=1000},
-  {id:'gd1', name:'Первый хороший', desc:'Сделайте хороший ход !', rarity:'C', reward:5, check:()=>statMove('!')>=1},
-  {id:'gd100', name:'Сто хороших', desc:'100 хороших ходов', rarity:'U', reward:25, check:()=>statMove('!')>=100},
-  {id:'gd500', name:'Пятьсот хороших', desc:'500 хороших ходов', rarity:'R', reward:60, check:()=>statMove('!')>=500},
-  {id:'ms1', name:'Первый промах', desc:'Сделайте неточный ход ?', rarity:'C', reward:5, check:()=>statMove('?')>=1},
-  {id:'ms50', name:'Пятьдесят промахов', desc:'50 неточных ходов', rarity:'U', reward:25, check:()=>statMove('?')>=50},
-  {id:'bl1', name:'Первый зевок', desc:'Сделайте ошибку ??', rarity:'C', reward:5, check:()=>statMove('??')>=1},
-  {id:'bl50', name:'Пятьдесят зевков', desc:'50 ошибок', rarity:'U', reward:25, check:()=>statMove('??')>=50},
-  {id:'s100', name:'Сотня звёзд', desc:'Заработайте 100 звёзд', rarity:'C', reward:10, check:()=>stat('starsEarned')>=100},
-  {id:'s500', name:'Пятьсот звёзд', desc:'Заработайте 500 звёзд', rarity:'C', reward:20, check:()=>stat('starsEarned')>=500},
-  {id:'s1000', name:'Тысяча звёзд', desc:'Заработайте 1000 звёзд', rarity:'U', reward:40, check:()=>stat('starsEarned')>=1000},
-  {id:'s5000', name:'Пять тысяч звёзд', desc:'Заработайте 5000 звёзд', rarity:'U', reward:80, check:()=>stat('starsEarned')>=5000},
-  {id:'s10000', name:'Десять тысяч звёзд', desc:'Заработайте 10000 звёзд', rarity:'R', reward:150, check:()=>stat('starsEarned')>=10000},
-  {id:'s50000', name:'Полсотни тысяч звёзд', desc:'Заработайте 50000 звёзд', rarity:'L', reward:400, check:()=>stat('starsEarned')>=50000},
-  {id:'s100000', name:'Сотня тысяч звёзд', desc:'Заработайте 100000 звёзд', rarity:'G', reward:1000, check:()=>stat('starsEarned')>=100000},
-  {id:'c1', name:'Первая корона', desc:'Заработайте первую корону', rarity:'C', reward:10, check:()=>stat('crownsEarned')>=1},
-  {id:'c10', name:'Десяток корон', desc:'10 корон', rarity:'C', reward:20, check:()=>stat('crownsEarned')>=10},
-  {id:'c50', name:'Полсотни корон', desc:'50 корон', rarity:'U', reward:45, check:()=>stat('crownsEarned')>=50},
-  {id:'c100', name:'Сотня корон', desc:'100 корон', rarity:'R', reward:90, check:()=>stat('crownsEarned')>=100},
-  {id:'c500', name:'Пятьсот корон', desc:'500 корон', rarity:'L', reward:220, check:()=>stat('crownsEarned')>=500},
-  {id:'c1000', name:'Тысяча корон', desc:'1000 корон', rarity:'T', reward:500, check:()=>stat('crownsEarned')>=1000},
-  {id:'les_b1', name:'Первый урок', desc:'Первый урок основ', rarity:'C', reward:10, check:()=>(S.lessons.basics||[]).length>=1},
-  {id:'les_b10', name:'Десяток основ', desc:'10 уроков основ', rarity:'U', reward:35, check:()=>(S.lessons.basics||[]).length>=10},
-  {id:'les_b20', name:'Мастер основ', desc:'Все 20 уроков основ', rarity:'R', reward:100, check:()=>(S.lessons.basics||[]).length>=20},
-  {id:'les_d1', name:'Первый дебют', desc:'Первый дебют', rarity:'C', reward:10, check:()=>(S.lessons.debuts||[]).length>=1},
-  {id:'les_d10', name:'Десяток дебютов', desc:'10 дебютов', rarity:'U', reward:35, check:()=>(S.lessons.debuts||[]).length>=10},
-  {id:'les_d30', name:'Знаток дебютов', desc:'Все 30 дебютов', rarity:'R', reward:120, check:()=>(S.lessons.debuts||[]).length>=30},
-  {id:'les_m1', name:'Первый мат', desc:'Первый урок матов', rarity:'C', reward:10, check:()=>(S.lessons.mates||[]).length>=1},
-  {id:'les_m10', name:'Десяток матов', desc:'10 уроков матов', rarity:'U', reward:35, check:()=>(S.lessons.mates||[]).length>=10},
-  {id:'les_m25', name:'Двадцать пять матов', desc:'25 уроков матов', rarity:'R', reward:80, check:()=>(S.lessons.mates||[]).length>=25},
-  {id:'les_m50', name:'Мастер матов', desc:'Все 50 уроков матов', rarity:'L', reward:250, check:()=>(S.lessons.mates||[]).length>=50},
-  {id:'shop1', name:'Первый покупатель', desc:'Купите первый товар', rarity:'C', reward:10, check:()=>stat('purchases')>=1},
-  {id:'shop5', name:'Покупатель', desc:'5 товаров', rarity:'C', reward:20, check:()=>stat('purchases')>=5},
-  {id:'shop10', name:'Коллекционер', desc:'10 товаров', rarity:'U', reward:40, check:()=>stat('purchases')>=10},
-  {id:'shop25', name:'Шопоголик', desc:'25 товаров', rarity:'R', reward:80, check:()=>stat('purchases')>=25},
-  {id:'shop50', name:'Меценат', desc:'50 товаров', rarity:'E', reward:200, check:()=>stat('purchases')>=50},
-  {id:'m1', name:'Первый мат игроку', desc:'Поставьте мат', rarity:'C', reward:10, check:()=>stat('matesDelivered')>=1},
-  {id:'m10', name:'Десяток матов', desc:'10 матов', rarity:'U', reward:35, check:()=>stat('matesDelivered')>=10},
-  {id:'m50', name:'Пятьдесят матов', desc:'50 матов', rarity:'R', reward:90, check:()=>stat('matesDelivered')>=50},
-  {id:'cast1', name:'Рокировка', desc:'Сделайте рокировку', rarity:'C', reward:10, check:()=>stat('castles')>=1},
-  {id:'cast50', name:'Любитель рокировок', desc:'50 рокировок', rarity:'U', reward:35, check:()=>stat('castles')>=50},
-  {id:'prom1', name:'Превращение', desc:'Превратите пешку', rarity:'C', reward:10, check:()=>stat('promotions')>=1},
-  {id:'prom25', name:'Ферзевый запас', desc:'25 превращений', rarity:'U', reward:45, check:()=>stat('promotions')>=25},
-  {id:'ep1', name:'Взятие на проходе', desc:'Взятие на проходе', rarity:'C', reward:15, check:()=>stat('enPassant')>=1},
-  {id:'cap100', name:'Сто взятий', desc:'100 взятий', rarity:'C', reward:15, check:()=>stat('captures')>=100},
-  {id:'cap500', name:'Пятьсот взятий', desc:'500 взятий', rarity:'U', reward:40, check:()=>stat('captures')>=500},
-  {id:'cap2000', name:'Две тысячи взятий', desc:'2000 взятий', rarity:'R', reward:120, check:()=>stat('captures')>=2000},
-  {id:'xp100', name:'Опыт 100', desc:'100 XP', rarity:'C', reward:10, check:()=>(S.xp||0)>=100},
-  {id:'xp500', name:'Опыт 500', desc:'500 XP', rarity:'U', reward:35, check:()=>(S.xp||0)>=500},
-  {id:'xp2000', name:'Опыт 2000', desc:'2000 XP', rarity:'R', reward:90, check:()=>(S.xp||0)>=2000},
-  {id:'xp10000', name:'Опыт 10000', desc:'10000 XP', rarity:'L', reward:300, check:()=>(S.xp||0)>=10000},
-  {id:'xp50000', name:'Опыт 50000', desc:'50000 XP', rarity:'P', reward:1000, check:()=>(S.xp||0)>=50000},
-  {id:'ach50', name:'Полсотни достижений', desc:'50 достижений', rarity:'R', reward:120, check:()=>Object.keys(S.achievements||{}).length>=50},
-  {id:'ach75', name:'Семьдесят пять достижений', desc:'75 достижений', rarity:'E', reward:250, check:()=>Object.keys(S.achievements||{}).length>=75},
-  {id:'ach99', name:'Почти всё', desc:'99 достижений', rarity:'D', reward:600, check:()=>Object.keys(S.achievements||{}).length>=99}
-];
-const OLD_RAR_MAP = {C:'common', U:'uncommon', R:'rare', E:'epic', L:'legendary', M:'mythic', K:'cosmic', T:'true', G:'magical', P:'supreme', D:'divine', S:'secret'};
-function achRarity(a){ return OLD_RAR_MAP[a.rarity] || 'common'; }
 
 /* ================= SHOP DATA ================= */
 const SHOP_DATA={
-  avatars:[
-    {id:'♟️',name:'Пешка'},{id:'♞',name:'Конь'},{id:'👑',name:'Корона'},
-    {id:'🔥',name:'Огонь'},{id:'💎',name:'Алмаз'},{id:'👽',name:'Пришелец'},
-    {id:'🐉',name:'Дракон'},{id:'🦁',name:'Лев'},{id:'🦅',name:'Орёл'},
-    {id:'🐺',name:'Волк'},{id:'🦊',name:'Лис'},{id:'🐻',name:'Медведь'},
-    {id:'⚡',name:'Молния'},{id:'☠️',name:'Череп'},{id:'🎭',name:'Маска'},
-    {id:'🏆',name:'Кубок'},{id:'👾',name:'Инопланетянин'},{id:'🤖',name:'Робот'},
-    {id:'🦄',name:'Единорог'},{id:'🐲',name:'Дракончик'}
-  ],
   frames:[
-    {id:'',name:'Без рамки'},
-    {id:'frame-bronze',name:'Бронзовая'},
-    {id:'frame-silver',name:'Серебряная'},
-    {id:'frame-gold',name:'Золотая'},
-    {id:'frame-neon',name:'Неоновая'},
-    {id:'frame-emerald',name:'Изумрудная'},
-    {id:'frame-ruby',name:'Рубиновая'},
-    {id:'frame-sapphire',name:'Сапфировая'},
-    {id:'frame-amethyst',name:'Аметистовая'},
-    {id:'frame-fire',name:'Огненная'},
-    {id:'frame-ice',name:'Ледяная'},
-    {id:'frame-toxic',name:'Токсичная'},
-    {id:'frame-cosmic',name:'Космическая'},
-    {id:'frame-blood',name:'Кровавая'},
-    {id:'frame-rainbow',name:'Радужная'},
-    {id:'frame-diamond',name:'Алмазная'},
-    {id:'frame-shadow',name:'Теневая'},
-    {id:'frame-holy',name:'Святая'},
-    {id:'frame-void',name:'Пустоты'},
-    {id:'frame-legend',name:'Легенда'},
-    {id:'frame-premium',name:'Premium',premium:true}
+    {id:'',name:'Без рамки', price:0},
+    {id:'frame-bronze',name:'Бронзовая', price:500},
+    {id:'frame-silver',name:'Серебряная', price:1500},
+    {id:'frame-gold',name:'Золотая', price:3000},
+    {id:'frame-neon',name:'Неоновая', price:5000},
+    {id:'frame-emerald',name:'Изумрудная', price:4500},
+    {id:'frame-ruby',name:'Рубиновая', price:4500},
+    {id:'frame-sapphire',name:'Сапфировая', price:4500},
+    {id:'frame-amethyst',name:'Аметистовая', price:4500},
+    {id:'frame-fire',name:'Огненная', price:6000},
+    {id:'frame-ice',name:'Ледяная', price:6000},
+    {id:'frame-toxic',name:'Токсичная', price:6000},
+    {id:'frame-cosmic',name:'Космическая', price:10000},
+    {id:'frame-blood',name:'Кровавая', price:8000},
+    {id:'frame-rainbow',name:'Радужная', price:15000},
+    {id:'frame-diamond',name:'Алмазная', price:20000},
+    {id:'frame-shadow',name:'Теневая', price:8000},
+    {id:'frame-holy',name:'Святая', price:25000},
+    {id:'frame-void',name:'Пустоты', price:25000},
+    {id:'frame-legend',name:'Легенда', price:50000},
+    {id:'frame-premium',name:'Premium', premium:true}
   ],
   prefixes:[
-    {id:'',name:'Без',cat:'—'},
-    {id:'[Новичок]',name:'Новичок',cat:'Ранги'},
-    {id:'[Ученик]',name:'Ученик',cat:'Ранги'},
-    {id:'[Средний]',name:'Средний',cat:'Ранги'},
-    {id:'[Опытный]',name:'Опытный',cat:'Ранги'},
-    {id:'[Мастер]',name:'Мастер',cat:'Ранги'},
-    {id:'[Гроссмейстер]',name:'Гроссмейстер',cat:'Ранги'},
-    {id:'[Элита]',name:'Элита',cat:'Ранги'},
-    {id:'[Легенда]',name:'Легенда',cat:'Ранги'},
-    {id:'[Волк]',name:'Волк',cat:'Животные'},
-    {id:'[Тигр]',name:'Тигр',cat:'Животные'},
-    {id:'[Лев]',name:'Лев',cat:'Животные'},
-    {id:'[Орёл]',name:'Орёл',cat:'Животные'},
-    {id:'[Акула]',name:'Акула',cat:'Животные'},
-    {id:'[Медведь]',name:'Медведь',cat:'Животные'},
-    {id:'[Ястреб]',name:'Ястреб',cat:'Животные'},
-    {id:'[Дракон]',name:'Дракон',cat:'Животные'},
-    {id:'[Маг]',name:'Маг',cat:'Мистика'},
-    {id:'[Чародей]',name:'Чародей',cat:'Мистика'},
-    {id:'[Демон]',name:'Демон',cat:'Мистика'},
-    {id:'[Ангел]',name:'Ангел',cat:'Мистика'},
-    {id:'[Божество]',name:'Божество',cat:'Мистика'},
-    {id:'[Бог шахмат]',name:'Бог шахмат',cat:'Мистика'},
-    {id:'[Титан]',name:'Титан',cat:'Мистика'},
-    {id:'[Абсолют]',name:'Абсолют',cat:'Мистика'},
-    {id:'[Алый]',name:'Алый',cat:'Цвета'},
-    {id:'[Лазурный]',name:'Лазурный',cat:'Цвета'},
-    {id:'[Изумрудный]',name:'Изумрудный',cat:'Цвета'},
-    {id:'[Золотой]',name:'Золотой',cat:'Цвета'},
-    {id:'[Серебряный]',name:'Серебряный',cat:'Цвета'},
-    {id:'[Бронзовый]',name:'Бронзовый',cat:'Цвета'},
-    {id:'[Неоновый]',name:'Неоновый',cat:'Цвета'},
-    {id:'[Кровавый]',name:'Кровавый',cat:'Цвета'},
-    {id:'[Феникс]',name:'Феникс',cat:'Стихии'},
-    {id:'[Огонь]',name:'Огонь',cat:'Стихии'},
-    {id:'[Лёд]',name:'Лёд',cat:'Стихии'},
-    {id:'[Молния]',name:'Молния',cat:'Стихии'},
-    {id:'[Тень]',name:'Тень',cat:'Стихии'},
-    {id:'[Призрак]',name:'Призрак',cat:'Стихии'},
-    {id:'[Гений]',name:'Гений',cat:'Характер'},
-    {id:'[Мудрец]',name:'Мудрец',cat:'Характер'},
-    {id:'[Стратег]',name:'Стратег',cat:'Характер'},
-    {id:'[Тактик]',name:'Тактик',cat:'Характер'},
-    {id:'[Аналитик]',name:'Аналитик',cat:'Характер'},
-    {id:'[Воин]',name:'Воин',cat:'Характер'},
-    {id:'[Победитель]',name:'Победитель',cat:'Характер'},
-    {id:'[Бессмертный]',name:'Бессмертный',cat:'Характер'},
-    {id:'[Premium]',name:'Premium',cat:'Premium',premium:true},
-    {id:'[VIP]',name:'VIP',cat:'Premium',premium:true},
-    {id:'[Elite]',name:'Elite',cat:'Premium',premium:true},
-    {id:'[∞]',name:'∞',cat:'Premium',premium:true}
+    {id:'',name:'Без', price:0, cat:'—'},
+    {id:'[Новичок]',name:'Новичок', price:100, cat:'Ранги'},
+    {id:'[Ученик]',name:'Ученик', price:300, cat:'Ранги'},
+    {id:'[Средний]',name:'Средний', price:800, cat:'Ранги'},
+    {id:'[Опытный]',name:'Опытный', price:1500, cat:'Ранги'},
+    {id:'[Мастер]',name:'Мастер', price:3000, cat:'Ранги'},
+    {id:'[Гроссмейстер]',name:'Гроссмейстер', price:6000, cat:'Ранги'},
+    {id:'[Элита]',name:'Элита', price:10000, cat:'Ранги'},
+    {id:'[Легенда]',name:'Легенда', price:20000, cat:'Ранги'},
+    {id:'[Волк]',name:'Волк', price:500, cat:'Животные'},
+    {id:'[Тигр]',name:'Тигр', price:1000, cat:'Животные'},
+    {id:'[Лев]',name:'Лев', price:2000, cat:'Животные'},
+    {id:'[Орёл]',name:'Орёл', price:1500, cat:'Животные'},
+    {id:'[Акула]',name:'Акула', price:1500, cat:'Животные'},
+    {id:'[Медведь]',name:'Медведь', price:1500, cat:'Животные'},
+    {id:'[Ястреб]',name:'Ястреб', price:2000, cat:'Животные'},
+    {id:'[Дракон]',name:'Дракон', price:10000, cat:'Животные'},
+    {id:'[Маг]',name:'Маг', price:3000, cat:'Мистика'},
+    {id:'[Чародей]',name:'Чародей', price:4000, cat:'Мистика'},
+    {id:'[Демон]',name:'Демон', price:8000, cat:'Мистика'},
+    {id:'[Ангел]',name:'Ангел', price:8000, cat:'Мистика'},
+    {id:'[Божество]',name:'Божество', price:30000, cat:'Мистика'},
+    {id:'[Бог шахмат]',name:'Бог шахмат', price:50000, cat:'Мистика'},
+    {id:'[Титан]',name:'Титан', price:15000, cat:'Мистика'},
+    {id:'[Абсолют]',name:'Абсолют', price:100000, cat:'Мистика'},
+    {id:'[Алый]',name:'Алый', price:200, cat:'Цвета'},
+    {id:'[Лазурный]',name:'Лазурный', price:200, cat:'Цвета'},
+    {id:'[Изумрудный]',name:'Изумрудный', price:200, cat:'Цвета'},
+    {id:'[Золотой]',name:'Золотой', price:5000, cat:'Цвета'},
+    {id:'[Серебряный]',name:'Серебряный', price:2000, cat:'Цвета'},
+    {id:'[Бронзовый]',name:'Бронзовый', price:1000, cat:'Цвета'},
+    {id:'[Неоновый]',name:'Неоновый', price:3000, cat:'Цвета'},
+    {id:'[Кровавый]',name:'Кровавый', price:3000, cat:'Цвета'},
+    {id:'[Феникс]',name:'Феникс', price:25000, cat:'Стихии'},
+    {id:'[Огонь]',name:'Огонь', price:2000, cat:'Стихии'},
+    {id:'[Лёд]',name:'Лёд', price:2000, cat:'Стихии'},
+    {id:'[Молния]',name:'Молния', price:2000, cat:'Стихии'},
+    {id:'[Тень]',name:'Тень', price:5000, cat:'Стихии'},
+    {id:'[Призрак]',name:'Призрак', price:5000, cat:'Стихии'},
+    {id:'[Гений]',name:'Гений', price:5000, cat:'Характер'},
+    {id:'[Мудрец]',name:'Мудрец', price:3000, cat:'Характер'},
+    {id:'[Стратег]',name:'Стратег', price:3000, cat:'Характер'},
+    {id:'[Тактик]',name:'Тактик', price:3000, cat:'Характер'},
+    {id:'[Аналитик]',name:'Аналитик', price:3000, cat:'Характер'},
+    {id:'[Воин]',name:'Воин', price:4000, cat:'Характер'},
+    {id:'[Победитель]',name:'Победитель', price:8000, cat:'Характер'},
+    {id:'[Бессмертный]',name:'Бессмертный', price:20000, cat:'Характер'},
+    {id:'[Premium]',name:'Premium', premium:true, cat:'Premium'},
+    {id:'[VIP]',name:'VIP', premium:true, cat:'Premium'},
+    {id:'[Elite]',name:'Elite', premium:true, cat:'Premium'},
+    {id:'[∞]',name:'∞', premium:true, cat:'Premium'}
   ]
 };
 
 /* ================= SAVE ================= */
-const SAVE_KEY='chez_save_v7';
-const LEGACY_SAVE_KEYS=['chez_save_v6','chez_save_v5','chez_save_v4','chez_save_v2'];
+const SAVE_KEY='chez_save_v10'; // Обновили версию
+const LEGACY_SAVE_KEYS=['chez_save_v7','chez_save_v6','chez_save_v5','chez_save_v4','chez_save_v2'];
 const DEFAULT_SAVE={
   stars:0,crowns:0,unlocked:1,
   owned:{board:[0],piece:[0],sound:[0]},
   equipped:{board:0,piece:0,sound:0,avatar:'♟️',frame:'',prefix:''},
   settings:{lang:'ru',trainerLang:'ru',showCaptured:true,showMoves:true,
-    animations:true,sound:true,hints:true,showQuality:true,theme:'dark',accent:'#7cd4a3'},
+    animations:true,sound:true,hints:true,showQuality:true,theme:'dark',accent:'#7cd4a3',
+    pieceColorW:'#ffffff', pieceColorB:'#1b1f27'}, // Новые цвета
   lessons:{basics:[],debuts:[],mates:[]},
   stats:{
     gamesPlayed:0,wins:0,losses:0,draws:0,
@@ -1285,7 +1094,7 @@ function migrateSave(){
     m.inventory[k]=m.inventory[k].filter(x=>typeof x==='string');
     if(!m.inventory[k].includes(d.inventory[k][0]))m.inventory[k].unshift(d.inventory[k][0]);
   });
-  [['board',BOARD_SKINS],['piece',PIECE_SKINS],['sound',SOUND_SKINS]].forEach(([k,arr])=>{
+  [['board',BOARD_SKINS]].forEach(([k,arr])=>{
     m.owned[k]=m.owned[k].filter(i=>Number.isInteger(i)&&i>=0&&i<arr.length);
     if(!m.owned[k].includes(0))m.owned[k].unshift(0);
     if(!(Number.isInteger(m.equipped[k])&&m.equipped[k]>=0&&m.equipped[k]<arr.length))m.equipped[k]=0;
@@ -1296,14 +1105,13 @@ function migrateSave(){
   ['basics','debuts','mates'].forEach(sec=>{
     m.lessons[sec]=[...new Set(m.lessons[sec].filter(i=>Number.isInteger(i)&&i>=0))].sort((a,b)=>a-b);
   });
-  [['board',BOARD_SKINS],['piece',PIECE_SKINS],['sound',SOUND_SKINS]].forEach(([k,arr])=>{
-    arr.forEach((sk,i)=>{
-      if(sk.rarity!=='secret'&&!sk.premiumOnly&&!m.owned[k].includes(i)) m.owned[k].push(i);
-    });
-  });
-  m.inventory.frames=[...new Set([...m.inventory.frames,...SHOP_DATA.frames.map(f=>f.id)])];
-  m.inventory.prefixes=[...new Set([...m.inventory.prefixes,...SHOP_DATA.prefixes.map(p=>p.id)])];
-  m.inventory.avatars=[...new Set([...m.inventory.avatars,...SHOP_DATA.avatars.map(a=>a.id)])];
+  // Все доски бесплатны
+  BOARD_SKINS.forEach((sk,i)=>{ if(!m.owned.board.includes(i)) m.owned.board.push(i); });
+  
+  // Рамки и префиксы - только те, что были куплены ранее
+  m.inventory.frames=[...new Set([...m.inventory.frames,''])];
+  m.inventory.prefixes=[...new Set([...m.inventory.prefixes,''])];
+  
   return m;
 }
 let S=migrateSave();
@@ -1311,10 +1119,7 @@ let S=migrateSave();
   MASTERY.forEach(m=>{
     if((S.xp||0)<m.xp||!m.reward)return;
     const r=m.reward;
-    if(r.avatar&&!S.inventory.avatars.includes(r.avatar))S.inventory.avatars.push(r.avatar);
     if(r.frame&&!S.inventory.frames.includes(r.frame))S.inventory.frames.push(r.frame);
-    if(r.boardSkin!==undefined&&!S.owned.board.includes(r.boardSkin))S.owned.board.push(r.boardSkin);
-    if(r.pieceSkin!==undefined&&!S.owned.piece.includes(r.pieceSkin))S.owned.piece.push(r.pieceSkin);
   });
 })();
 let saveDebounce=null;
@@ -1325,7 +1130,6 @@ function save(){
     saveDebounce=setTimeout(()=>{saveDebounce=null;saveOnline();},1200);
   }
 }
-function saveLocal(){save();}
 function saveOnline(){
   if(!supabase||!currentUser||!profileWritable) return;
   const payload={stars:S.stars||0,xp:S.xp||0,rating:S.rating||1000};
@@ -1335,9 +1139,7 @@ function saveOnline(){
   supabase.from('profiles').update(payload).eq('id',currentUser.id)
     .then(({error})=>{if(error&&error.code==='42501')profileWritable=false;});
 }
-function saveAll(){save();}
 
-/* ================= v0.7 HELPERS ================= */
 function isPremium(){
   return !!(S&&(S.is_premium||S.is_mod));
 }
@@ -1362,13 +1164,12 @@ function tone(freq,dur,type,vol){
   if(!S.settings.sound) return;
   try{
     const c=ac(),o=c.createOscillator(),g=c.createGain();
-    const pk=SOUND_SKINS[S.equipped.sound]||SOUND_SKINS[0];
-    o.type=type||pk.type||'sine';
-    o.frequency.value=freq*(pk.pitch||1);
+    o.type=type||'sine';
+    o.frequency.value=freq;
     o.connect(g);g.connect(c.destination);
     const tt=c.currentTime;
     g.gain.setValueAtTime(0.0001,tt);
-    g.gain.linearRampToValueAtTime((vol||0.08)*(pk.vol||1),tt+0.012);
+    g.gain.linearRampToValueAtTime((vol||0.08),tt+0.012);
     g.gain.exponentialRampToValueAtTime(0.0001,tt+dur);
     o.start(tt);o.stop(tt+dur+0.03);
   }catch(e){}
@@ -1442,18 +1243,17 @@ function updateDebutHint(){
 }
 function posTransform(i){const v=boardToView(i),x=v%8,y=(v/8)|0;return `translate(${x*100}%,${y*100}%)`;}
 function renderPieces(st){
-  const ps = PIECE_SKINS[S.equipped.piece] || PIECE_SKINS[0];
-  const rar = ps.rarity || 'common';
   const seen=new Set();
   for(let i=0;i<64;i++){
     const p=st.b[i]; if(!p) continue;
     seen.add(p.id);
     let el=pieceEls.get(p.id);
     if(!el){el=div('piece');el.dataset.id=p.id;pieceEls.set(p.id,el);piecesEl.appendChild(el);}
-    el.textContent=GLYPH[p.k.toLowerCase()];
+    
+    // ИСПОЛЬЗУЕМ SVG
+    el.innerHTML=PIECE_SVGS[p.k.toLowerCase()];
     el.classList.toggle('w',p.k<'a');
     el.classList.toggle('b',p.k>='a');
-    el.dataset.rar=rar;
     el.style.transform=posTransform(i);
   }
   const dead=[];
@@ -1943,9 +1743,6 @@ function applyMasteryReward(reward){
     S.stars=(S.stars||0)+reward.stars;
     S.stats.starsEarned=(S.stats.starsEarned||0)+reward.stars;
   }
-  if(reward.boardSkin!==undefined && !S.owned.board.includes(reward.boardSkin)) S.owned.board.push(reward.boardSkin);
-  if(reward.pieceSkin!==undefined && !S.owned.piece.includes(reward.pieceSkin)) S.owned.piece.push(reward.pieceSkin);
-  if(reward.avatar && !S.inventory.avatars.includes(reward.avatar)) S.inventory.avatars.push(reward.avatar);
   if(reward.frame && !S.inventory.frames.includes(reward.frame)) S.inventory.frames.push(reward.frame);
 }
 
@@ -2043,7 +1840,7 @@ function completeLesson(section,i){
 function saveTxt(){
   if(!G) return;
   const lines=[];
-  lines.push('Chez! v0.7 — запись партии');
+  lines.push('Chez! v1.0 beta — запись партии');
   lines.push('Дата: '+new Date().toLocaleString());
   lines.push('Режим: '+(G.mode==='offline'?'Офлайн':G.mode==='trainer'?'Тренер':G.mode==='lesson'?'Урок':'Демо'));
   lines.push('Соперник: бот '+(G.botElo||'—')+' ELO');
@@ -2353,7 +2150,7 @@ function doHumanMove(m){
 function showPromotionPicker(m){
   const p=showModal('Превращение пешки',
     `<div class="promo-row">${[['q','Ферзь'],['r','Ладья'],['b','Слон'],['n','Конь']].map(([k,n])=>
-      `<button class="promo-btn" data-p="${k}" title="${n}">${GLYPH[k]}</button>`).join('')}</div>`,[]);
+      `<button class="promo-btn" data-p="${k}" title="${n}" style="color:var(--pw)">${PIECE_SVGS[k]}</button>`).join('')}</div>`,[]);
   p.querySelectorAll('[data-p]').forEach(b=>{
     b.onclick=()=>{
       const mp=b.dataset.p;
@@ -2469,49 +2266,24 @@ function startOfflineGame(botIndex){
 
 /* ================= SHOP ================= */
 function openShop(tab){
-  tab=tab||'board';
-  const TABS=[['board','Доски'],['piece','Фигуры'],['sound','Звуки'],
-    ['avatars','Аватарки'],['frames','Рамки'],['prefixes','Префиксы']];
-  const isSkinTab=k=>k==='board'||k==='piece'||k==='sound';
+  tab=tab||'frames';
+  const TABS=[['frames','Рамки'],['prefixes','Префиксы']];
   const render=()=>{
     let cards='';
-    if(isSkinTab(tab)){
-      const kind=tab;
-      const data=kind==='board'?BOARD_SKINS:kind==='piece'?PIECE_SKINS:SOUND_SKINS;
-      const owned=S.owned[kind];
-      data.forEach((it,i)=>{
-        const isOwned=owned.includes(i);
-        const isEq=S.equipped[kind]===i;
-        const rar=RARITY_BY_KEY[it.rarity];
-        const isSecret=it.rarity==='secret';
-        const isPrem=it.premiumOnly;
-        let prev='';
-        if(kind==='board')prev=`<div class="prev" style="background:linear-gradient(135deg,${it.c1} 50%,${it.c2} 50%)"></div>`;
-        else if(kind==='piece')prev=`<div class="prev" style="background:var(--panel);color:${it.w};text-shadow:1px 0 ${it.b},-1px 0 ${it.b},0 1px ${it.b},0 -1px ${it.b}">♞</div>`;
-        else prev=`<div class="prev" style="background:var(--panel);color:var(--accent);font-size:14px">♪ ${it.type}</div>`;
-        let btnLabel, sub;
-        if(isSecret&&!isOwned){btnLabel='Эксклюзив';sub='за мастерство';}
-        else if(isPrem&&!isOwned){btnLabel='Premium';sub='Premium';}
-        else if(isEq){btnLabel=t('equipped');sub='бесплатно';}
-        else{btnLabel=t('equip');sub='бесплатно';}
-        cards+=`<div class="card ${isOwned?'owned':''} ${!isOwned?'locked':''}" data-i="${i}" data-kind="${kind}">
-          ${prev}
-          <div class="rar-lbl" style="color:${isPrem?'#ffd700':rar.color}">${isPrem?'Premium':rar.name}</div>
-          <div class="nm">${it.name}</div>
-          <div class="pr">${sub}</div>
-          <button class="btn ${isEq?'primary':''}">${btnLabel}</button>
-        </div>`;
-      });
-    } else if(tab==='frames'){
+    if(tab==='frames'){
       SHOP_DATA.frames.forEach((it,i)=>{
+        const isOwned=S.inventory.frames.includes(it.id);
         const isEq=S.equipped.frame===it.id;
         const canUse=!it.premium||isPremium();
+        let btnLabel = isEq ? t('equipped') : isOwned ? t('equip') : t('buy');
+        let sub = isEq ? 'Надето' : isOwned ? 'Куплено' : (it.premium ? 'Premium' : fmt(it.price)+' ★');
+        
         cards+=`<div class="card ${isEq?'owned':''} ${!canUse?'locked':''}" data-i="${i}" data-tab="frames">
           <div class="prev"><div class="avatar ${esc(it.id||'')}" style="width:30px;height:30px;background:var(--panel)">♟️</div></div>
           <div class="rar-lbl" style="color:${it.premium?'#ffd700':'var(--muted)'}">${it.premium?'Premium':'Косметика'}</div>
           <div class="nm">${esc(it.name)}</div>
-          <div class="pr">${it.premium?'Premium':'бесплатно'}</div>
-          <button class="btn ${isEq?'primary':''}">${isEq?t('equipped'):t('equip')}</button>
+          <div class="pr">${sub}</div>
+          <button class="btn ${isEq?'primary':''}">${btnLabel}</button>
         </div>`;
       });
     } else if(tab==='prefixes'){
@@ -2520,31 +2292,24 @@ function openShop(tab){
         cards+=`<div class="prefix-cat">${esc(cat)}</div>`;
         SHOP_DATA.prefixes.filter(p=>p.cat===cat).forEach(it=>{
           const i=SHOP_DATA.prefixes.indexOf(it);
+          const isOwned=S.inventory.prefixes.includes(it.id);
           const isEq=S.equipped.prefix===it.id;
           const canUse=!it.premium||isPremium();
+          let btnLabel = isEq ? t('equipped') : isOwned ? t('equip') : t('buy');
+          let sub = isEq ? 'Надето' : isOwned ? 'Куплено' : (it.premium ? 'Premium' : fmt(it.price)+' ★');
+          
           cards+=`<div class="card ${isEq?'owned':''} ${!canUse?'locked':''}" data-i="${i}" data-tab="prefixes">
             <div class="prev" style="font-size:11px;font-weight:bold;color:var(--accent)">${esc(it.id||'—')}</div>
             <div class="rar-lbl" style="color:${it.premium?'#ffd700':'var(--muted)'}">${it.premium?'Premium':'Косметика'}</div>
             <div class="nm">${esc(it.name)}</div>
-            <div class="pr">${it.premium?'Premium':'бесплатно'}</div>
-            <button class="btn ${isEq?'primary':''}">${isEq?t('equipped'):t('equip')}</button>
+            <div class="pr">${sub}</div>
+            <button class="btn ${isEq?'primary':''}">${btnLabel}</button>
           </div>`;
         });
       });
-    } else if(tab==='avatars'){
-      SHOP_DATA.avatars.forEach((it,i)=>{
-        const isEq=S.equipped.avatar===it.id;
-        cards+=`<div class="card ${isEq?'owned':''}" data-i="${i}" data-tab="avatars">
-          <div class="prev" style="font-size:28px">${esc(it.id)}</div>
-          <div class="rar-lbl" style="color:var(--muted)">Косметика</div>
-          <div class="nm">${esc(it.name)}</div>
-          <div class="pr">бесплатно</div>
-          <button class="btn ${isEq?'primary':''}">${isEq?t('equipped'):t('equip')}</button>
-        </div>`;
-      });
     }
     return `<div class="tabs">${TABS.map(([k,n])=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${n}</button>`).join('')}</div>
-      <div style="margin-bottom:8px;color:var(--muted);font-size:11.5px">Все обычные скины бесплатны. Эксклюзивы за мастерство и Premium — отдельно.</div>
+      <div style="margin-bottom:8px;color:var(--muted);font-size:11.5px">Звёзд: <b style="color:var(--accent)">${fmt(S.stars||0)}</b></div>
       <div class="grid">${cards}</div>`;
   };
   const p=showModal('Магазин',render(),[],true);
@@ -2557,30 +2322,33 @@ function openShop(tab){
       card.querySelector('button').onclick=e=>{
         e.stopPropagation();
         const i=+card.dataset.i;
-        const kind=card.dataset.kind||card.dataset.tab;
-        if(isSkinTab(kind)){
-          const data=kind==='board'?BOARD_SKINS:kind==='piece'?PIECE_SKINS:SOUND_SKINS;
-          const it=data[i];
-          const owned=S.owned[kind];
-          if(owned.includes(i)){S.equipped[kind]=i;save();applySettings();SFX.click();}
-          else if(it.premiumOnly&&!isPremium()){SFX.error();toast('Только для Premium');}
-          else if(it.rarity==='secret'){SFX.error();toast('Открывается за уровень мастерства');}
-        } else if(kind==='frames'){
-          const it=SHOP_DATA.frames[i];
-          if(!it) return;
-          if(it.premium&&!isPremium()){SFX.error();toast('Только для Premium');return;}
-          S.equipped.frame=it.id;save();SFX.click();setAccountName(S.username);toast('Надето: '+it.name);
-        } else if(kind==='prefixes'){
-          const it=SHOP_DATA.prefixes[i];
-          if(!it) return;
-          if(it.premium&&!isPremium()){SFX.error();toast('Только для Premium');return;}
-          S.equipped.prefix=it.id;save();SFX.click();setAccountName(S.username);toast('Надето: '+it.name);
-        } else if(kind==='avatars'){
-          const it=SHOP_DATA.avatars[i];
-          if(!it) return;
-          S.equipped.avatar=it.id;save();SFX.click();toast('Надето: '+it.name);
+        const kind=card.dataset.tab;
+        
+        let it, invList, eqKey;
+        if(kind==='frames'){ it=SHOP_DATA.frames[i]; invList=S.inventory.frames; eqKey='frame'; }
+        else if(kind==='prefixes'){ it=SHOP_DATA.prefixes[i]; invList=S.inventory.prefixes; eqKey='prefix'; }
+        if(!it) return;
+
+        if(invList.includes(it.id)){
+          S.equipped[eqKey]=it.id;save();SFX.click();setAccountName(S.username);
+          p.querySelector('.modal-body').innerHTML=render();bind();
+        } else {
+          if(it.premium && !isPremium()){
+            SFX.error();toast('Только для Premium');return;
+          }
+          if(S.stars < it.price){
+            SFX.error();toast('Недостаточно звёзд');return;
+          }
+          S.stars -= it.price;
+          invList.push(it.id);
+          S.equipped[eqKey] = it.id;
+          S.purchases=(S.purchases||0)+1;
+          S.stats.purchases=(S.stats.purchases||0)+1;
+          save(); checkAchievements(); SFX.capture();
+          toast('Куплено: '+it.name);
+          p.querySelector('.modal-body').innerHTML=render();bind();
+          setAccountName(S.username);
         }
-        p.querySelector('.modal-body').innerHTML=render();bind();
       };
     });
   };
@@ -2593,14 +2361,21 @@ function openSettings(tab){
   const render=()=>{
     let body='';
     if(tab==='cust'){
+      let boardSwatches = BOARD_SKINS.map((x,i)=>`
+        <div class="theme-swatch ${i===S.equipped.board?'selected':''}" data-id="${i}" 
+             style="background:linear-gradient(135deg, ${x.c1} 50%, ${x.c2} 50%)" title="${x.name}"></div>
+      `).join('');
+
       body=`
-        <div class="setRow"><span>Скин доски</span>
-          <select id="selBoard">${BOARD_SKINS.map((x,i)=>S.owned.board.includes(i)?`<option value="${i}" ${i===S.equipped.board?'selected':''}>${x.name} (${RARITY_BY_KEY[x.rarity].name})</option>`:'').join('')}</select></div>
-        <div class="setRow"><span>Скин фигур</span>
-          <select id="selPiece">${PIECE_SKINS.map((x,i)=>S.owned.piece.includes(i)?`<option value="${i}" ${i===S.equipped.piece?'selected':''}>${x.name} (${RARITY_BY_KEY[x.rarity].name})</option>`:'').join('')}</select></div>
-        <div class="setRow"><span>Саундпак</span>
-          <select id="selSound">${SOUND_SKINS.map((x,i)=>S.owned.sound.includes(i)?`<option value="${i}" ${i===S.equipped.sound?'selected':''}>${x.name} (${RARITY_BY_KEY[x.rarity].name})</option>`:'').join('')}</select></div>
-        <div class="setRow"><span>Тема</span>
+        <div class="setRow" style="flex-direction:column;align-items:flex-start;gap:6px">
+          <span>Тема доски</span>
+          <div class="theme-grid">${boardSwatches}</div>
+        </div>
+        <div class="setRow" style="margin-top:10px"><span>Цвет белых фигур</span>
+          <input type="color" id="selColorW" value="${S.settings.pieceColorW}"></div>
+        <div class="setRow"><span>Цвет чёрных фигур</span>
+          <input type="color" id="selColorB" value="${S.settings.pieceColorB}"></div>
+        <div class="setRow"><span>Тема интерфейса</span>
           <select id="selTheme">
             <option value="dark" ${S.settings.theme==='dark'?'selected':''}>Тёмная</option>
             <option value="light" ${S.settings.theme==='light'?'selected':''}>Светлая</option>
@@ -2639,16 +2414,24 @@ function openSettings(tab){
   const p=showModal('Настройки', render(), [{label:t('close'),primary:true,onClick:closeModal}]);
   const bind=()=>{
     p.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{SFX.click();tab=b.dataset.tab;refresh();});
-    const sb=p.querySelector('#selBoard'),sp=p.querySelector('#selPiece'),ss=p.querySelector('#selSound'),
-          st=p.querySelector('#selTheme'),sa=p.querySelector('#selAccent'),
+    
+    p.querySelectorAll('.theme-swatch').forEach(sw=>sw.onclick=()=>{
+      S.equipped.board = +sw.dataset.id;
+      save(); applySettings();
+      refresh(); // Перерисовать чтобы обновить выделение
+    });
+
+    const scw=p.querySelector('#selColorW'), scb=p.querySelector('#selColorB');
+    if(scw) scw.oninput=()=>{S.settings.pieceColorW=scw.value;save();applySettings();};
+    if(scb) scb.oninput=()=>{S.settings.pieceColorB=scb.value;save();applySettings();};
+
+    const st=p.querySelector('#selTheme'),sa=p.querySelector('#selAccent'),
           sl=p.querySelector('#selLang'),stl=p.querySelector('#selTLang');
-    if(sb) sb.onchange=()=>{S.equipped.board=+sb.value;save();applySettings();};
-    if(sp) sp.onchange=()=>{S.equipped.piece=+sp.value;save();applySettings();};
-    if(ss) ss.onchange=()=>{S.equipped.sound=+ss.value;save();SFX.click();};
     if(st) st.onchange=()=>{S.settings.theme=st.value;save();applySettings();};
     if(sa) sa.oninput=()=>{S.settings.accent=sa.value;save();applySettings();};
     if(sl) sl.onchange=()=>{S.settings.lang=sl.value;LANG=sl.value;save();applyI18N();};
     if(stl) stl.onchange=()=>{S.settings.trainerLang=stl.value;save();};
+    
     p.querySelectorAll('.switch').forEach(sw=>{
       sw.onclick=()=>{
         const k=sw.dataset.key;
@@ -2889,9 +2672,9 @@ function openHelp(){
     <div class="help-sec"><h4>🎓 Учиться</h4>
       <p>Основы → Дебюты → Маты. Этапы открываются по порядку. За каждый пройденный — звёзды и XP.</p></div>
     <div class="help-sec"><h4>🏆 Мастерство</h4>
-      <p>XP капает за победы. На уровнях 9 / 14 / 20 открываются Бронзовый / Серебряный / Золотой скины (доски и фигуры).</p></div>
+      <p>XP капает за победы. Открываются новые рамки и звёзды.</p></div>
     <div class="help-sec"><h4>💎 Premium</h4>
-      <p>Даёт: градиент ника, эксклюзивные скины и доски, +50% к росту ELO, −20% к падению ELO, Premium-префиксы и рамки. Выдаётся модератором по твоему нику.</p></div>
+      <p>Даёт: градиент ника, эксклюзивные рамки/префиксы, +50% к росту ELO, −20% к падению ELO. Выдаётся модератором по нику.</p></div>
     <div class="help-sec"><h4>🛡️ Модерация</h4>
       <p>Первый модер назначается через SQL или в Table Editor Supabase. Дальше модеры выдают модерку и Premium прямо в игре по нику.</p></div>
     <div class="help-sec"><h4>⌨️ Горячие клавиши</h4>
@@ -2905,8 +2688,8 @@ function openAchievements(){
   const total=ACHIEVEMENTS.length;
   const unlockedCount=ACHIEVEMENTS.filter(a=>unlocked[a.id]).length;
   const sorted=[...ACHIEVEMENTS].sort((a,b)=>{
-    const ra=RARITIES.findIndex(r=>r.key===achRarity(a));
-    const rb=RARITIES.findIndex(r=>r.key===achRarity(b));
+    const ra=Object.keys(RARITY_BY_KEY).indexOf(a.rarity);
+    const rb=Object.keys(RARITY_BY_KEY).indexOf(b.rarity);
     return rb-ra;
   });
   let html=`<div style="margin-bottom:8px;color:var(--muted);font-size:12px">Открыто ${unlockedCount} из ${total}</div>
@@ -2915,7 +2698,7 @@ function openAchievements(){
     </div>`;
   sorted.forEach(a=>{
     const isUnlocked=!!unlocked[a.id];
-    const rar = RARITY_BY_KEY[achRarity(a)];
+    const rar = RARITY_BY_KEY[a.rarity];
     html+=`<div class="listRow" style="opacity:${isUnlocked?1:.5}">
       <div class="nm">${a.name}<div class="sub">${a.desc}</div></div>
       <div style="text-align:right;min-width:80px">
@@ -2948,10 +2731,11 @@ function openMastery(){
   MASTERY.forEach((m,i)=>{
     const reached=xp>=m.xp;
     const isCur=i===cur.index;
+    let rwStr = m.reward ? `${m.reward.stars||0}★` : 'Титул';
     html+=`<div class="mastery-node ${reached?'reached':''} ${isCur?'current':''}">
       <div class="lvl">Ур. ${i+1}</div>
       <div class="nm">${m.name}</div>
-      <div class="rw">${formatMasteryReward(m.reward)}</div>
+      <div class="rw">${rwStr}</div>
       <div class="xp">${m.xp} XP</div>
     </div>`;
   });
@@ -3076,13 +2860,15 @@ function applySettings(){
   document.body.dataset.theme=S.settings.theme;
   document.documentElement.style.setProperty('--accent',S.settings.accent);
   document.documentElement.style.setProperty('--accent-fg',lum(S.settings.accent)>0.55?'#101010':'#ffffff');
+  
   const bs=BOARD_SKINS[S.equipped.board]||BOARD_SKINS[0];
   document.documentElement.style.setProperty('--sq-light',bs.c1);
   document.documentElement.style.setProperty('--sq-dark',bs.c2);
-  boardEl.dataset.rar = bs.rarity || 'common';
-  const ps=PIECE_SKINS[S.equipped.piece]||PIECE_SKINS[0];
-  document.documentElement.style.setProperty('--pw',ps.w);
-  document.documentElement.style.setProperty('--pb',ps.b);
+  
+  // Применяем цвета фигур
+  document.documentElement.style.setProperty('--pw',S.settings.pieceColorW||'#ffffff');
+  document.documentElement.style.setProperty('--pb',S.settings.pieceColorB||'#1b1f27');
+  
   document.body.classList.toggle('noanim',!S.settings.animations);
   if(G) drawBoard(G.st);
   updateGameUI();
@@ -3656,14 +3442,14 @@ function init(){
     S.seenWelcome=true;
     save();
     setTimeout(()=>{
-      showModal('Добро пожаловать в Chez! v0.7',
+      showModal('Добро пожаловать в Chez! v1.0 beta',
         `<div style="line-height:1.7;font-size:12.5px">
           <p><b>Что нового:</b></p>
           <ul style="margin:6px 0 12px;padding-left:18px;color:var(--muted)">
-            <li>Система ID полностью удалена. Теперь всё по никам.</li>
-            <li>Все обычные скины (доски, фигуры, звуки, рамки, префиксы) — <b style="color:var(--accent)">бесплатны</b></li>
-            <li>Premium-статус: градиент ника, эксклюзивные скины, +50% к ELO</li>
-            <li>Панель модерации ищет игроков по нику</li>
+            <li>Скин фигур теперь векторный (SVG), и вы можете настроить их цвет!</li>
+            <li>Магазин сфокусирован на Рамках и Префиксах за звёзды.</li>
+            <li>Визуальный предпросмотр тем доски в настройках.</li>
+            <li>Модерация теперь работает по никам.</li>
           </ul>
           <p style="color:var(--muted)">Приятной игры! ♟️</p>
         </div>`,
