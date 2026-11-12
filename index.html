@@ -292,7 +292,7 @@ input[type=color]{padding:2px;height:28px;width:44px}
               <li>Фигуры теперь SVG (разные формы)</li>
               <li>Выбор цвета фигур в настройках</li>
               <li>Магазин: только Рамки и Префиксы</li>
-              <li>Визуальный выбор досок</li>
+              <li>Серверная защита покупок и валюты</li>
             </ul>
           </div>
         </div>
@@ -907,7 +907,8 @@ function getMasteryLevel(xp){
 }
 
 /* ================= ACHIEVEMENTS ================= */
-// (Сокращено для размера, логика та же)
+const stat = k=>(S.stats&&S.stats[k])||0;
+const statMove = k=>(S.stats&&S.stats.moves&&S.stats.moves[k])||0;
 const ACHIEVEMENTS = [
   {id:'g1', name:'Первый ход', desc:'Сыграйте первую партию', rarity:'common', reward:10, check:()=>stat('gamesPlayed')>=1},
   {id:'g5', name:'Пять партий', desc:'Сыграйте 5 партий', rarity:'common', reward:15, check:()=>stat('gamesPlayed')>=5},
@@ -932,10 +933,9 @@ const ACHIEVEMENTS = [
   {id:'cast1', name:'Рокировка', desc:'Сделайте рокировку', rarity:'common', reward:10, check:()=>stat('castles')>=1},
   {id:'prom1', name:'Превращение', desc:'Превратите пешку', rarity:'common', reward:10, check:()=>stat('promotions')>=1},
 ];
-const stat = k=>(S.stats&&S.stats[k])||0;
-const statMove = k=>(S.stats&&S.stats.moves&&S.stats.moves[k])||0;
 
 /* ================= SHOP DATA ================= */
+// Данные для локального отображения. Цены проверяются сервером.
 const SHOP_DATA={
   frames:[
     {id:'',name:'Без рамки', price:0},
@@ -1016,7 +1016,7 @@ const SHOP_DATA={
 };
 
 /* ================= SAVE ================= */
-const SAVE_KEY='chez_save_v10'; // Обновили версию
+const SAVE_KEY='chez_save_v10';
 const LEGACY_SAVE_KEYS=['chez_save_v7','chez_save_v6','chez_save_v5','chez_save_v4','chez_save_v2'];
 const DEFAULT_SAVE={
   stars:0,crowns:0,unlocked:1,
@@ -1024,7 +1024,7 @@ const DEFAULT_SAVE={
   equipped:{board:0,piece:0,sound:0,avatar:'♟️',frame:'',prefix:''},
   settings:{lang:'ru',trainerLang:'ru',showCaptured:true,showMoves:true,
     animations:true,sound:true,hints:true,showQuality:true,theme:'dark',accent:'#7cd4a3',
-    pieceColorW:'#ffffff', pieceColorB:'#1b1f27'}, // Новые цвета
+    pieceColorW:'#ffffff', pieceColorB:'#1b1f27'},
   lessons:{basics:[],debuts:[],mates:[]},
   stats:{
     gamesPlayed:0,wins:0,losses:0,draws:0,
@@ -1105,23 +1105,14 @@ function migrateSave(){
   ['basics','debuts','mates'].forEach(sec=>{
     m.lessons[sec]=[...new Set(m.lessons[sec].filter(i=>Number.isInteger(i)&&i>=0))].sort((a,b)=>a-b);
   });
-  // Все доски бесплатны
   BOARD_SKINS.forEach((sk,i)=>{ if(!m.owned.board.includes(i)) m.owned.board.push(i); });
   
-  // Рамки и префиксы - только те, что были куплены ранее
   m.inventory.frames=[...new Set([...m.inventory.frames,''])];
   m.inventory.prefixes=[...new Set([...m.inventory.prefixes,''])];
   
   return m;
 }
 let S=migrateSave();
-(function grantMasteryExtras(){
-  MASTERY.forEach(m=>{
-    if((S.xp||0)<m.xp||!m.reward)return;
-    const r=m.reward;
-    if(r.frame&&!S.inventory.frames.includes(r.frame))S.inventory.frames.push(r.frame);
-  });
-})();
 let saveDebounce=null;
 function save(){
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}
@@ -1132,10 +1123,18 @@ function save(){
 }
 function saveOnline(){
   if(!supabase||!currentUser||!profileWritable) return;
-  const payload={stars:S.stars||0,xp:S.xp||0,rating:S.rating||1000};
-  payload.is_premium=!!S.is_premium;
+  
+  // Отправляем только безопасные данные (XP, рейтинг, статистику)
+  const payload={
+    xp:S.xp||0, 
+    rating:S.rating||1000,
+    is_premium:!!S.is_premium,
+    stats: S.stats
+  };
+  
   const img=safeImgUrl(S.avatar_url);
   if(img)payload.avatar_url=img;
+  
   supabase.from('profiles').update(payload).eq('id',currentUser.id)
     .then(({error})=>{if(error&&error.code==='42501')profileWritable=false;});
 }
@@ -1250,7 +1249,6 @@ function renderPieces(st){
     let el=pieceEls.get(p.id);
     if(!el){el=div('piece');el.dataset.id=p.id;pieceEls.set(p.id,el);piecesEl.appendChild(el);}
     
-    // ИСПОЛЬЗУЕМ SVG
     el.innerHTML=PIECE_SVGS[p.k.toLowerCase()];
     el.classList.toggle('w',p.k<'a');
     el.classList.toggle('b',p.k>='a');
@@ -2319,7 +2317,7 @@ function openShop(tab){
       p.querySelector('.modal-body').innerHTML=render();bind();
     });
     p.querySelectorAll('.card').forEach(card=>{
-      card.querySelector('button').onclick=e=>{
+      card.querySelector('button').onclick=async e=>{
         e.stopPropagation();
         const i=+card.dataset.i;
         const kind=card.dataset.tab;
@@ -2330,23 +2328,43 @@ function openShop(tab){
         if(!it) return;
 
         if(invList.includes(it.id)){
-          S.equipped[eqKey]=it.id;save();SFX.click();setAccountName(S.username);
-          p.querySelector('.modal-body').innerHTML=render();bind();
-        } else {
+          if(!supabase || !currentUser) { toast('Войдите в аккаунт'); return; }
+          
+          const res = await supabase.rpc('equip_item', { p_item_id: it.id, p_type: eqKey });
+          if(res.error || res.data.error){
+            SFX.error();
+            toast('Ошибка сервера: ' + (res.error?.message || res.data.error));
+            return;
+          }
+          S.equipped[eqKey] = it.id;
+          saveLocal(); SFX.click(); setAccountName(S.username);
+          p.querySelector('.modal-body').innerHTML=render(); bind();
+        } 
+        else {
           if(it.premium && !isPremium()){
-            SFX.error();toast('Только для Premium');return;
+            SFX.error(); toast('Только для Premium'); return;
           }
-          if(S.stars < it.price){
-            SFX.error();toast('Недостаточно звёзд');return;
+          if(!supabase || !currentUser) { toast('Войдите в аккаунт'); return; }
+          
+          const res = await supabase.rpc('buy_item', { p_item_id: it.id, p_type: kind });
+          
+          if(res.error || res.data.error){
+            SFX.error(); 
+            toast('Ошибка: ' + (res.error?.message || res.data.error)); 
+            return;
           }
-          S.stars -= it.price;
-          invList.push(it.id);
+          
+          S.stars = res.data.new_stars;
+          if(kind === 'frames') S.inventory.frames = res.data.new_inventory.frames;
+          if(kind === 'prefixes') S.inventory.prefixes = res.data.new_inventory.prefixes;
+          
           S.equipped[eqKey] = it.id;
           S.purchases=(S.purchases||0)+1;
           S.stats.purchases=(S.stats.purchases||0)+1;
-          save(); checkAchievements(); SFX.capture();
-          toast('Куплено: '+it.name);
-          p.querySelector('.modal-body').innerHTML=render();bind();
+          
+          saveLocal(); checkAchievements(); SFX.capture();
+          toast('Куплено: ' + it.name);
+          p.querySelector('.modal-body').innerHTML=render(); bind();
           setAccountName(S.username);
         }
       };
@@ -2418,7 +2436,7 @@ function openSettings(tab){
     p.querySelectorAll('.theme-swatch').forEach(sw=>sw.onclick=()=>{
       S.equipped.board = +sw.dataset.id;
       save(); applySettings();
-      refresh(); // Перерисовать чтобы обновить выделение
+      refresh();
     });
 
     const scw=p.querySelector('#selColorW'), scb=p.querySelector('#selColorB');
@@ -2865,7 +2883,6 @@ function applySettings(){
   document.documentElement.style.setProperty('--sq-light',bs.c1);
   document.documentElement.style.setProperty('--sq-dark',bs.c2);
   
-  // Применяем цвета фигур
   document.documentElement.style.setProperty('--pw',S.settings.pieceColorW||'#ffffff');
   document.documentElement.style.setProperty('--pb',S.settings.pieceColorB||'#1b1f27');
   
@@ -2907,17 +2924,28 @@ function syncProfile(p){
   if(!p) return;
   currentUser=p; isOnline=true;
   S.username=p.username||S.username||'';
-  const serverHasProgress=!!(Number(p.stars)||Number(p.crowns)||Number(p.xp)||(p.stats&&Number(p.stats.gamesPlayed))||(Number(p.rating)&&Number(p.rating)!==1000));
   S.rating=Number(p.rating)||S.rating||1000;
-  if(serverHasProgress){
-    S.stars=Math.max(Number(S.stars)||0,Number(p.stars)||0);
-    S.xp=Math.max(Number(S.xp)||0,Number(p.xp)||0);
+  S.xp=Number(p.xp)||S.xp||0;
+  S.stars=Number(p.stars)||S.stars||0;
+  
+  if(p.inventory){
+    if(p.inventory.frames) S.inventory.frames = p.inventory.frames;
+    if(p.inventory.prefixes) S.inventory.prefixes = p.inventory.prefixes;
   }
+  if(p.equipped){
+    if(p.equipped.frame !== undefined) S.equipped.frame = p.equipped.frame;
+    if(p.equipped.prefix !== undefined) S.equipped.prefix = p.equipped.prefix;
+  }
+  if(p.stats && typeof p.stats === 'object'){
+    S.stats = Object.assign({}, S.stats, p.stats);
+  }
+  
   S.is_mod=!!p.is_mod; S.is_banned=!!p.is_banned;
   S.is_premium=!!p.is_premium;
   S.avatar_url=safeImgUrl(p.avatar_url)||S.avatar_url;
+  
   setAccountName(S.username);
-  save();
+  saveLocal();
   if(G)updateGameUI();
 }
 async function openAccountModal(){
@@ -3018,7 +3046,8 @@ async function openAccountModal(){
         return;
       }
       const np={id:data.user.id,username:u,rating:Number(S.rating)||1000,
-        stars:S.stars||0,xp:S.xp||0,is_premium:false,is_mod:false};
+        stars:S.stars||0,xp:S.xp||0,is_premium:false,is_mod:false,
+        inventory:{frames:[""],prefixes:[""]}, equipped:{frame:"",prefix:""}, stats:{}};
       const ins=await supabase.from('profiles').upsert(np,{onConflict:'id'});
       if(ins.error){
         if(ins.error.code==='42501')profileWritable=false;
