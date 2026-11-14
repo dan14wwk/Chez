@@ -3,7 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Chez! v1.0 beta</title>
+<meta name="description" content="Chez! — шахматы с обучением, магазином, достижениями и онлайн-игрой.">
+<meta name="theme-color" content="#0e1116">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chez!">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="chez-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="chez-icon.svg">
+<title>Chez! v1.1</title>
 <style>
 :root{
   --bg:#0e1116; --panel:#161a21; --panel2:#1e242e; --fg:#e9ecf2; --muted:#8b93a3;
@@ -180,20 +188,66 @@ input[type=color]{padding:2px;height:28px;width:44px}
 .mastery-node .nm{font-size:11.5px;font-weight:700;margin:2px 0}
 .mastery-node .rw{font-size:10px;color:var(--accent);line-height:1.3;margin-top:3px;min-height:28px}
 .mastery-node .xp{font-size:9.5px;color:var(--muted);margin-top:2px}
-#stage[data-orient="portrait"]{width:600px;height:900px}
-#stage[data-orient="portrait"] #app{flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px}
-#stage[data-orient="portrait"] #main{order:1;flex:0 0 auto;width:var(--board)}
-#stage[data-orient="portrait"] #side{order:2;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
-  gap:6px 10px;width:var(--board);align-items:center;flex:0 0 auto}
-#stage[data-orient="portrait"] #title{grid-column:1/-1;grid-row:1;font-size:18px;margin:0;text-align:left}
-#stage[data-orient="portrait"] #logoWrap{grid-column:1;grid-row:2;width:80px;height:80px;aspect-ratio:auto}
-#stage[data-orient="portrait"] #menu{grid-column:2;grid-row:2;display:grid;grid-template-columns:1fr 1fr;gap:5px}
-#stage[data-orient="portrait"] .mbtn{padding:7px 9px;font-size:11px;gap:5px}
-#stage[data-orient="portrait"] #sideCol.on{width:0;margin-left:0}
-#stage[data-orient="portrait"] #sideColInner{display:none}
-#stage[data-orient="portrait"] #trainerBox{max-height:90px}
-
-/* ===== v1.0 additions ===== */
+/* ===== MOBILE UI (portrait) ===== */
+@media (orientation: portrait){
+  html,body{height:100%;overflow:hidden;background:var(--bg)}
+  body{display:block}
+  #stage{position:fixed;inset:0;width:auto!important;height:auto!important;transform:none!important;
+    box-shadow:none;border-radius:0;background:var(--bg)}
+  #app{position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;
+    padding:calc(8px + env(safe-area-inset-top)) 10px calc(76px + env(safe-area-inset-bottom));
+    overflow-y:auto;overflow-x:hidden;align-items:center;justify-content:flex-start}
+  :root{--board:min(calc(100vw - 24px), calc(100vh - 330px), 560px)}
+  :root{--board:min(calc(100vw - 24px), calc(100dvh - 330px), 560px)}
+  #side{position:fixed;left:0;right:0;bottom:0;z-index:90;display:block;width:100%;
+    background:var(--panel);border-top:1px solid rgba(255,255,255,.09);
+    padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  #title,#logoWrap{display:none}
+  #menu{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+  .mbtn{flex-direction:column;gap:3px;padding:7px 2px;min-height:54px;font-size:10px;
+    border-radius:12px;justify-content:center;text-align:center;background:transparent;border-color:transparent}
+  .mbtn .ico{width:22px;height:22px}
+  .mbtn svg{width:20px;height:20px}
+  .mbtn:hover{transform:none}
+  #main{width:100%;order:1;gap:6px}
+  #topbar{font-size:10px;padding:0 2px}
+  #playArea{width:100%;justify-content:center}
+  #boardCol{width:100%;align-items:center}
+  .capRow{width:var(--board);min-height:18px;font-size:13px}
+  #statusLine{font-size:12px;min-height:18px}
+  #gameBar{gap:6px}
+  .sbtn{padding:9px 13px;font-size:12px}
+  #clockLine{font-size:17px}
+  #sideCol{display:none!important}
+  .modal-back{align-items:flex-end;padding:0}
+  .modal{width:100%;max-width:100%;max-height:88dvh;border-radius:18px 18px 0 0;
+    border-bottom:0;animation:sheetUp .22s cubic-bezier(.2,.9,.3,1)}
+  @keyframes sheetUp{from{transform:translateY(44px);opacity:.6}to{transform:none;opacity:1}}
+  .modal.wide{width:100%;max-height:90dvh}
+  .modal-head{padding:14px 16px}
+  .modal-head h3{font-size:16px}
+  .modal-body{font-size:14px;padding:14px 16px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
+  .more-grid{gap:8px}
+  .more-item{min-height:72px;padding:14px 6px}
+  .more-item .lbl{opacity:1;color:var(--muted);position:static;margin-top:6px;font-size:10.5px}
+  .mastery-node{width:84px}
+  .toast{bottom:calc(88px + env(safe-area-inset-bottom))}
+  #wnPop{position:fixed;left:10px;right:10px;top:auto;bottom:calc(76px + env(safe-area-inset-bottom));
+    width:auto;transform:none}
+  .wnwrap:hover #wnPop{opacity:0;visibility:hidden;transform:none}
+  .wnwrap.open #wnPop{opacity:1;visibility:visible;transform:none}
+  .authInput{font-size:15px;padding:12px}
+  .btn{padding:10px 14px;font-size:13px}
+}
+@media (orientation: portrait) and (max-height: 700px){
+  :root{--board:min(calc(100vw - 24px), calc(100vh - 300px), 520px)}
+  :root{--board:min(calc(100vw - 24px), calc(100dvh - 300px), 520px)}
+  .capRow{display:none}
+}
+.confetti{position:absolute;top:-14px;width:8px;height:14px;border-radius:2px;z-index:400;
+  pointer-events:none;animation:confFall 1.35s ease-in forwards}
+@keyframes confFall{to{transform:translateY(105vh) rotate(560deg);opacity:0}}
 .avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;overflow:hidden;
   background:var(--panel2);font-size:20px;font-weight:800;flex:0 0 auto;border:1px solid rgba(255,255,255,.12)}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block}
@@ -255,6 +309,26 @@ input[type=color]{padding:2px;height:28px;width:44px}
 .theme-swatch { aspect-ratio: 1; border-radius: 8px; border: 2px solid transparent; cursor: pointer; transition: .2s; }
 .theme-swatch:hover { transform: scale(1.05); }
 .theme-swatch.selected { border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+@media (orientation: portrait){
+  .authInput{font-size:15px;padding:12px}
+}
+#netDot{color:#7cd4a3;font-size:10px;vertical-align:middle}
+#netDot.off{color:#e06a6a}
+.mbtn .dot{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 6px var(--accent)}
+.mbtn{position:relative}
+.questRow{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;
+  background:var(--panel2);margin-bottom:8px}
+.questRow .qinfo{flex:1;min-width:0}
+.questRow .qname{font-weight:700;font-size:13px}
+.questRow .qbar{height:6px;border-radius:4px;background:rgba(255,255,255,.12);margin-top:6px;overflow:hidden}
+.questRow .qbar i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .3s}
+.questRow .qmeta{font-size:11px;color:var(--muted);margin-top:4px}
+.questRow .qbtn{flex:0 0 auto}
+.accentRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.accentDot{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer}
+.accentDot.on{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,.5)}
 </style>
 </head>
 <body data-theme="dark">
@@ -273,7 +347,7 @@ input[type=color]{padding:2px;height:28px;width:44px}
           <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 3h6a2 2 0 0 1 2 2v15a3 3 0 0 0-2-1H4zM20 3h-6a2 2 0 0 0-2 2v15a3 3 0 0 1 2-1h6z"/></svg></span><span data-i18n="learn">Учиться</span>
         </button>
         <button class="mbtn" data-act="more">
-          <span class="ico"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></span><span data-i18n="more">Ещё</span>
+          <span class="ico"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></span><span data-i18n="more">Ещё</span><span class="dot" id="questDot" style="display:none"></span>
         </button>
         <button class="mbtn" data-act="account" id="btnAccount">
           <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span><span id="accountName" data-i18n="account">Аккаунт</span>
@@ -283,16 +357,16 @@ input[type=color]{padding:2px;height:28px;width:44px}
 
     <main id="main">
       <div id="topbar">
-        <span id="ver">chez! v1.0 beta · F — на весь экран</span>
+        <span id="ver">chez! v1.1 · <span id="netDot" title="Сеть">●</span> · F — на весь экран</span>
         <div class="wnwrap">
           <button id="wnBtn" data-i18n="whatsnew">что нового</button>
           <div id="wnPop">
-            <b>v1.0 beta</b>
+            <b>v1.1</b>
             <ul>
-              <li>Фигуры теперь SVG (разные формы)</li>
-              <li>Выбор цвета фигур в настройках</li>
-              <li>Магазин: только Рамки и Префиксы</li>
-              <li>Серверная защита покупок и валюты</li>
+              <li>Ежедневные задания и бонус дня</li>
+              <li>Мобильный интерфейс и PWA</li>
+              <li>Серверные покупки и расчёты</li>
+              <li>Переворот доски, шаринг, экспорт</li>
             </ul>
           </div>
         </div>
@@ -1024,7 +1098,7 @@ const DEFAULT_SAVE={
   equipped:{board:0,piece:0,sound:0,avatar:'♟️',frame:'',prefix:''},
   settings:{lang:'ru',trainerLang:'ru',showCaptured:true,showMoves:true,
     animations:true,sound:true,hints:true,showQuality:true,theme:'dark',accent:'#7cd4a3',
-    pieceColorW:'#ffffff', pieceColorB:'#1b1f27'},
+    haptics:true,pieceColorW:'#ffffff', pieceColorB:'#1b1f27'},
   lessons:{basics:[],debuts:[],mates:[]},
   stats:{
     gamesPlayed:0,wins:0,losses:0,draws:0,
@@ -1039,6 +1113,8 @@ const DEFAULT_SAVE={
   avatar_url:null,is_mod:false,is_banned:false,is_premium:false,
   purchases:0,username:'',
   nickColor:'#e9ecf2',nickColor2:'#7cd4a3',
+  lastDaily:null,dailyStreak:0,
+  daily:{date:null,games:0,wins:0,captures:0,claimed:[]},
   seenWelcome:false
 };
 function readJSON(key){try{const r=localStorage.getItem(key);return r?JSON.parse(r):null;}catch(e){return null;}}
@@ -1083,6 +1159,15 @@ function migrateSave(){
     nickColor:typeof s.nickColor==='string'?s.nickColor:d.nickColor,
     nickColor2:typeof s.nickColor2==='string'?s.nickColor2:d.nickColor2,
     is_premium:!!s.is_premium,
+    lastDaily:typeof s.lastDaily==='string'?s.lastDaily:null,
+    dailyStreak:num(s.dailyStreak,0),
+    daily:{
+      date:typeof (s.daily&&s.daily.date)==='string'?s.daily.date:null,
+      games:num(s.daily&&s.daily.games,0),
+      wins:num(s.daily&&s.daily.wins,0),
+      captures:num(s.daily&&s.daily.captures,0),
+      claimed:Array.isArray(s.daily&&s.daily.claimed)?s.daily.claimed.filter(x=>typeof x==='string'):[]
+    },
     seenWelcome:!!s.seenWelcome
   };
   m.stats.moves=Object.assign({},d.stats.moves,st.moves||{});
@@ -1113,30 +1198,71 @@ function migrateSave(){
   return m;
 }
 let S=migrateSave();
-let saveDebounce=null;
 function save(){
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}
-  if(isOnline&&currentUser&&supabase){
-    if(saveDebounce)clearTimeout(saveDebounce);
-    saveDebounce=setTimeout(()=>{saveDebounce=null;saveOnline();},1200);
-  }
 }
-function saveOnline(){
-  if(!supabase||!currentUser||!profileWritable) return;
-  
-  // Отправляем только безопасные данные (XP, рейтинг, статистику)
-  const payload={
-    xp:S.xp||0, 
-    rating:S.rating||1000,
-    is_premium:!!S.is_premium,
-    stats: S.stats
+function saveLocal(){ save(); }
+function isOnlineUser(){ return !!(isOnline&&currentUser&&supabase); }
+function rpcErrorText(e){
+  const m={
+    already_claimed:'Уже получено',not_done:'Ещё не выполнено',
+    not_enough_stars:'Не хватает звёзд',already_owned:'Уже куплено',
+    premium_only:'Только для Premium',banned:'Аккаунт заблокирован',
+    forbidden:'Нужен вход в аккаунт',not_found:'Не найдено',bad_url:'Некорректная ссылка',
+    bad_mode:'Некорректный режим',bad_result:'Некорректный результат',bad_type:'Некорректный тип',
+    bad_quest:'Неизвестное задание',no_item:'Товар не найден',not_owned:'Сначала купите товар'
   };
-  
-  const img=safeImgUrl(S.avatar_url);
-  if(img)payload.avatar_url=img;
-  
-  supabase.from('profiles').update(payload).eq('id',currentUser.id)
-    .then(({error})=>{if(error&&error.code==='42501')profileWritable=false;});
+  return m[e]||('Ошибка: '+e);
+}
+async function rpc(name,params){
+  if(!supabase) return {error:'offline'};
+  try{
+    const {data,error}=await supabase.rpc(name,params||{});
+    if(error) return {error:error.message||String(error)};
+    if(data&&data.error) return {error:String(data.error)};
+    return {data};
+  }catch(e){ return {error:String(e)}; }
+}
+function applyServerProfile(p){
+  if(!p||typeof p!=='object') return;
+  S.stars=Number(p.stars)||0;
+  S.crowns=Number(p.crowns)||0;
+  S.xp=Number(p.xp)||0;
+  S.rating=Number(p.rating)||S.rating||1000;
+  if(p.stats&&typeof p.stats==='object') S.stats=Object.assign({},S.stats,p.stats);
+  if(p.inventory&&typeof p.inventory==='object'){
+    if(Array.isArray(p.inventory.frames)) S.inventory.frames=p.inventory.frames;
+    if(Array.isArray(p.inventory.prefixes)) S.inventory.prefixes=p.inventory.prefixes;
+  }
+  if(p.equipped&&typeof p.equipped==='object'){
+    if(typeof p.equipped.frame==='string') S.equipped.frame=p.equipped.frame;
+    if(typeof p.equipped.prefix==='string') S.equipped.prefix=p.equipped.prefix;
+  }
+  if(p.lessons&&typeof p.lessons==='object'){
+    if(Array.isArray(p.lessons.basics)) S.lessons.basics=p.lessons.basics;
+    if(Array.isArray(p.lessons.debuts)) S.lessons.debuts=p.lessons.debuts;
+    if(Array.isArray(p.lessons.mates)) S.lessons.mates=p.lessons.mates;
+  }
+  if(p.achievements&&typeof p.achievements==='object') S.achievements=Object.assign({},p.achievements);
+  if(Array.isArray(p.claimed_mastery)) S.claimedMastery=p.claimed_mastery;
+  if(typeof p.last_daily==='string') S.lastDaily=p.last_daily;
+  if(typeof p.daily_streak==='number') S.dailyStreak=p.daily_streak;
+  if(p.daily&&typeof p.daily==='object'){
+    S.daily={
+      date:typeof p.daily.date==='string'?p.daily.date:null,
+      games:Number(p.daily.games)||0,
+      wins:Number(p.daily.wins)||0,
+      captures:Number(p.daily.captures)||0,
+      claimed:Array.isArray(p.daily.claimed)?p.daily.claimed.slice():[]
+    };
+  }
+  S.username=p.username||S.username||'';
+  S.is_mod=!!p.is_mod; S.is_banned=!!p.is_banned; S.is_premium=!!p.is_premium;
+  const img=safeImgUrl(p.avatar_url); if(img) S.avatar_url=img;
+  setAccountName(S.username);
+  updateQuestDot();
+  save();
+  if(G) updateGameUI();
 }
 
 function isPremium(){
@@ -1153,6 +1279,19 @@ function setAccountName(name){
     el.classList.add('name-premium');
   } else if(S.nickColor){
     el.style.color=S.nickColor;
+  }
+}
+function buzz(p){ try{ if(S.settings.haptics!==false && navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+function confetti(){
+  if(!S.settings.animations) return;
+  const colors=['#7cd4a3','#ffd84d','#ff5c5c','#5ba8ff','#ff00ff','#ffffff'];
+  for(let i=0;i<30;i++){
+    const d=div('confetti');
+    d.style.background=colors[i%colors.length];
+    d.style.left=(6+Math.random()*88)+'%';
+    d.style.animationDelay=(Math.random()*0.3)+'s';
+    stage.appendChild(d);
+    setTimeout(()=>d.remove(),1700);
   }
 }
 
@@ -1272,6 +1411,15 @@ function showHighlights(st){
   if(k>=0&&attacked(st.b,k,st.turn==='w'?'b':'w')) squares[boardToView(k)].classList.add('check');
 }
 function drawBoard(st){renderPieces(st);showHighlights(st);updateArrows();drawCaptured(st);}
+function flipBoard(silent){
+  orientation = orientation==='w'?'b':'w';
+  buildSquares();
+  if(G) drawBoard(G.st);
+  if(!silent){
+    toast(orientation==='w'?'Белые снизу':'Чёрные снизу');
+    buzz(8);
+  }
+}
 function updateVisualsOnly(){if(!G) return;showHighlights(G.st);updateArrows();}
 const CAP_ORDER=['p','n','b','r','q'];
 function drawCaptured(st){
@@ -1370,18 +1518,24 @@ function showQualityMark(sq,mark){
 
 /* ================= LAYOUT ================= */
 let stretched=false;
+function isMobileLayout(){ return window.innerHeight > window.innerWidth; }
 function layout(){
-  const portrait = window.innerHeight > window.innerWidth;
-  const W = portrait ? 600 : 900;
-  const H = portrait ? 900 : 600;
-  stage.style.width = W + 'px';
-  stage.style.height = H + 'px';
-  stage.dataset.orient = portrait ? 'portrait' : 'landscape';
-  const board = portrait ? 500 : 350;
-  document.documentElement.style.setProperty('--board', board + 'px');
-  const fitScale = Math.min(window.innerWidth / W, window.innerHeight / H);
-  const s = stretched ? fitScale : Math.min(1, fitScale);
-  stage.style.transform = `scale(${s})`;
+  const portrait = isMobileLayout();
+  if(portrait){
+    stage.style.width='100vw'; stage.style.height='100dvh'; stage.style.transform='none';
+    stage.dataset.orient='portrait';
+    document.documentElement.style.setProperty('--board','min(calc(100vw - 24px), calc(100vh - 330px), 560px)');
+    document.documentElement.style.setProperty('--board','min(calc(100vw - 24px), calc(100dvh - 330px), 560px)');
+  } else {
+    const W=900,H=600;
+    stage.style.width=W+'px'; stage.style.height=H+'px';
+    stage.dataset.orient='landscape';
+    document.documentElement.style.setProperty('--board','350px');
+    const fitScale=Math.min(window.innerWidth/W, window.innerHeight/H);
+    const s=stretched?fitScale:Math.min(1,fitScale);
+    stage.style.transform=`scale(${s})`;
+  }
+  const wn=document.querySelector('.wnwrap'); if(wn) wn.classList.remove('open');
   if(G){ renderPieces(G.st); showHighlights(G.st); updateArrows(); }
 }
 window.addEventListener('resize', layout);
@@ -1397,7 +1551,17 @@ window.addEventListener('keydown', e => {
     e.preventDefault();
   }
   if(e.key==='Escape') closeModal();
+  if(!typing&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
+    const k=String(e.key||'').toLowerCase();
+    if(k==='b'||k==='и'){ flipBoard(); e.preventDefault(); }
+    else if(k==='q'||k==='й'){ openQuests(); e.preventDefault(); }
+  }
 });
+window.addEventListener('online',updateNetDot);
+window.addEventListener('offline',updateNetDot);
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;toast('Chez! установлен 🎉');});
 
 /* ================= GAME ================= */
 let G=null;
@@ -1516,13 +1680,22 @@ function applyMove(m,opts){
     if(m.flag==='castleK'||m.flag==='castleQ') SFX.castle();
     else if(wasCapture) SFX.capture();
     else SFX.move();
+    buzz(wasCapture?[16,22,16]:7);
   }
   if(opts.human&&G.mode!=='demo'&&G.mode!=='replay'){
-    if(quality!==null) S.stats.moves[quality]=(S.stats.moves[quality]||0)+1;
-    if(wasCapture) S.stats.captures=(S.stats.captures||0)+1;
-    if(m.flag==='castleK'||m.flag==='castleQ') S.stats.castles=(S.stats.castles||0)+1;
-    if(m.promo) S.stats.promotions=(S.stats.promotions||0)+1;
-    if(m.flag==='ep') S.stats.enPassant=(S.stats.enPassant||0)+1;
+    if(isOnlineUser()){
+      if(!G.actions) G.actions={captures:0,castles:0,promotions:0,enPassant:0};
+      if(wasCapture) G.actions.captures++;
+      if(m.flag==='castleK'||m.flag==='castleQ') G.actions.castles++;
+      if(m.promo) G.actions.promotions++;
+      if(m.flag==='ep') G.actions.enPassant++;
+    } else {
+      if(quality!==null) S.stats.moves[quality]=(S.stats.moves[quality]||0)+1;
+      if(wasCapture) S.stats.captures=(S.stats.captures||0)+1;
+      if(m.flag==='castleK'||m.flag==='castleQ') S.stats.castles=(S.stats.castles||0)+1;
+      if(m.promo) S.stats.promotions=(S.stats.promotions||0)+1;
+      if(m.flag==='ep') S.stats.enPassant=(S.stats.enPassant||0)+1;
+    }
     save();
   }
   drawBoard(G.st);
@@ -1623,6 +1796,29 @@ function updateMoveList(){
   ml.innerHTML=html;
   ml.scrollTop=ml.scrollHeight;
 }
+function openMovesSheet(){
+  if(!G){ toast('Нет партии'); return; }
+  let html='';
+  for(let i=0;i<G.history.length;i+=2){
+    const n=i/2+1;
+    const a=G.history[i], b=G.history[i+1];
+    html+=`<div style="display:flex;gap:6px"><span style="width:22px;color:var(--muted)">${n}.</span><b>${a?a.note:''}</b>${a&&a.quality?' <span style="color:var(--accent)">'+a.quality+'</span>':''}</div>`;
+    if(b) html+=`<div style="display:flex;gap:6px"><span style="width:22px"></span><b style="opacity:.75">${b.note}</b>${b.quality?' <span style="color:var(--accent)">'+b.quality+'</span>':''}</div>`;
+  }
+  if(!html) html='<div style="color:var(--muted)">Ходов пока нет</div>';
+  showModal('Ходы',`<div style="font-size:13px;line-height:1.8">${html}</div>`,
+    [{label:'Закрыть',primary:true,onClick:closeModal}]);
+}
+function confirmResign(){
+  if(!G||G.over) return;
+  showModal('Сдаться?',
+    `<div style="font-size:13px;line-height:1.7;color:var(--muted)">
+       Партия будет засчитана как поражение.
+       ${G.mode==='online'?'Рейтинг может снизиться.':''}
+     </div>`,
+    [{label:'Продолжить',primary:true,onClick:closeModal},
+     {label:'Сдаться',onClick:()=>{closeModal(); finishGame('lose','Сдача');}}]);
+}
 function updateGameUI(){
   const bar=$('#gameBar');
   const sc=$('#sideCol');
@@ -1652,7 +1848,8 @@ function updateGameUI(){
       bar.appendChild(b);
     };
     mkO('½ Ничья',()=>offerDraw());
-    mkO(t('resign'),()=>{ if(!G.over) finishGame('lose','Сдача'); });
+    mkO(t('resign'),()=>confirmResign());
+    mkO('⇅',()=>flipBoard());
     mkO(t('save'),()=>openSaveDialog());
     updateClocks();
     return;
@@ -1665,9 +1862,11 @@ function updateGameUI(){
     b.onclick=()=>{SFX.click();fn();};
     bar.appendChild(b);
   };
-  mk(t('resign'), ()=>{ if(!G.over) finishGame('lose','Сдача'); });
+  mk(t('resign'), ()=>confirmResign());
   if(G.mode==='trainer' || (G.mode==='lesson' && G.lesson && G.lesson.section!=='debuts')) mk('← Назад', ()=>undoMove());
+  mk('⇅', ()=>flipBoard());
   mk(t('save'), ()=>openSaveDialog());
+  if(isMobileLayout()) mk('Ходы', ()=>openMovesSheet());
   mk('В меню', ()=>{ stopDemo(); startDemo(); });
   if(G.mode==='trainer' || G.mode==='lesson'){
     $('#trainerBox').style.display='block';
@@ -1743,8 +1942,282 @@ function applyMasteryReward(reward){
   }
   if(reward.frame && !S.inventory.frames.includes(reward.frame)) S.inventory.frames.push(reward.frame);
 }
+async function claimDaily(){
+  if(isOnlineUser()){
+    const res=await rpc('daily_reward',{});
+    if(res.error){ toast(res.error==='already_claimed'?'Бонус уже получен сегодня':('Ошибка: '+res.error)); SFX.error(); return; }
+    if(res.data){
+      applyServerProfile(res.data.profile);
+      toast(`Бонус дня: +${res.data.reward}★ · стрик ${res.data.streak}`);
+      SFX.win(); confetti(); buzz([20,30,20]);
+    }
+    return;
+  }
+  const today=new Date().toISOString().slice(0,10);
+  if(S.lastDaily===today){ toast('Бонус уже получен сегодня'); SFX.error(); return; }
+  const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
+  S.dailyStreak=(S.lastDaily===y?(S.dailyStreak||0):0)+1;
+  const reward=50*Math.min(S.dailyStreak,10);
+  S.stars=(S.stars||0)+reward;
+  S.stats.starsEarned=(S.stats.starsEarned||0)+reward;
+  S.lastDaily=today;
+  save();
+  toast(`Бонус дня: +${reward}★ · стрик ${S.dailyStreak}`);
+  SFX.win(); confetti(); buzz([20,30,20]);
+}
+
+/* ================= DAILY QUESTS ================= */
+const QUESTS=[
+  {id:'games',    name:'Сыграть 3 партии',    target:3,  reward:120},
+  {id:'wins',     name:'Одержать победу',     target:1,  reward:150},
+  {id:'captures', name:'Сделать 10 взятий',   target:10, reward:100}
+];
+function localDaily(){
+  const today=new Date().toISOString().slice(0,10);
+  if(!S.daily||typeof S.daily!=='object') S.daily={date:today,games:0,wins:0,captures:0,claimed:[]};
+  if(S.daily.date!==today) S.daily={date:today,games:0,wins:0,captures:0,claimed:[]};
+  if(!Array.isArray(S.daily.claimed)) S.daily.claimed=[];
+  return S.daily;
+}
+function localQuestList(){
+  const d=localDaily();
+  return QUESTS.map(q=>{
+    const claimed=d.claimed.includes(q.id);
+    const progress=Math.min(Number(d[q.id])||0,q.target);
+    return {id:q.id,name:q.name,target:q.target,reward:q.reward,
+      progress,claimed,ready:!claimed&&progress>=q.target};
+  });
+}
+function updateQuestDot(){
+  const el=document.getElementById('questDot');
+  if(!el) return;
+  const d=S.daily||{};
+  const today=new Date().toISOString().slice(0,10);
+  if(d.date!==today){ el.style.display='none'; return; }
+  const n=QUESTS.filter(q=>!(d.claimed||[]).includes(q.id)&&(Number(d[q.id])||0)>=q.target).length;
+  el.style.display=n?'block':'none';
+  el.title=n+' заданий готово';
+}
+async function openQuests(){
+  let quests=null, guest=!isOnlineUser();
+  if(!guest){
+    const res=await rpc('get_daily_quests',{});
+    if(res.error) guest=true;
+    else {
+      quests=(res.data&&res.data.quests)||[];
+      if(res.data&&res.data.profile) applyServerProfile(res.data.profile);
+    }
+  }
+  if(!quests||!quests.length) quests=localQuestList();
+  renderQuests(quests,guest);
+  updateQuestDot();
+}
+function renderQuests(quests,guest){
+  let html='';
+  if(guest) html+='<div style="font-size:11px;color:var(--muted);margin-bottom:10px">Гостевой режим: прогресс хранится на этом устройстве. Войдите в аккаунт, чтобы получать серверные награды.</div>';
+  quests.forEach(q=>{
+    const pct=Math.min(100,Math.round((q.progress||0)/Math.max(1,q.target)*100));
+    let right;
+    if(q.claimed) right='<span style="color:var(--accent);font-size:18px">✓</span>';
+    else if(q.ready) right=`<button class="btn primary qbtn" data-q="${q.id}">${q.reward}★</button>`;
+    else right=`<span style="font-size:11px;color:var(--muted)">${q.reward}★</span>`;
+    html+=`<div class="questRow">
+      <div class="qinfo">
+        <div class="qname">${esc(q.name)}</div>
+        <div class="qbar"><i style="width:${pct}%"></i></div>
+        <div class="qmeta">${q.progress||0} / ${q.target} · награда ${q.reward}★</div>
+      </div>
+      <div class="qbtn">${right}</div>
+    </div>`;
+  });
+  html+='<div style="font-size:11px;color:var(--muted);margin-top:4px">Задания обновляются каждый день в 00:00 UTC.</div>';
+  const p=showModal('Ежедневные задания',html,[{label:'Закрыть',primary:true,onClick:closeModal}]);
+  p.querySelectorAll('button[data-q]').forEach(b=>{
+    b.onclick=async()=>{
+      b.disabled=true;
+      await claimQuest(b.dataset.q,guest);
+      openQuests();
+    };
+  });
+}
+async function claimQuest(id,guest){
+  if(guest||!isOnlineUser()){
+    const d=localDaily();
+    const q=QUESTS.find(x=>x.id===id);
+    if(!q) return;
+    if(d.claimed.includes(id)){ toast('Награда уже получена'); return; }
+    if((Number(d[id])||0)<q.target){ toast('Задание ещё не выполнено'); SFX.error(); return; }
+    d.claimed.push(id);
+    S.stars=(S.stars||0)+q.reward;
+    S.stats.starsEarned=(S.stats.starsEarned||0)+q.reward;
+    save();
+    toast(`Награда: +${q.reward}★`);
+    SFX.win(); confetti(); buzz([20,30,20]);
+    return;
+  }
+  const res=await rpc('claim_quest',{p_id:id});
+  if(res.error){
+    toast(rpcErrorText(res.error));
+    SFX.error(); return;
+  }
+  applyServerProfile(res.data.profile);
+  toast(`Награда: +${res.data.reward}★`);
+  SFX.win(); confetti(); buzz([20,30,20]);
+}
 
 /* ================= GAME END ================= */
+function localGameMath(p){
+  const elo=p.elo||100, q=p.quality||{};
+  let stars_gain=0,crowns_gain=0,xp_gain=0;
+  if(p.result==='win'){
+    let gain=elo+(q['!!']||0)*100+(q['★']||0)*25+(q['!']||0)*10
+             -((q['?']||0)+(q['??']||0))*15-(q['']||0)*30;
+    gain=Math.max(elo/2, Math.round(gain));
+    stars_gain=gain;
+    crowns_gain=Math.round(elo/100);
+    xp_gain=Math.max(1, Math.round(stars_gain*10/(S.playerElo||100)));
+  } else if(p.result==='lose'){
+    crowns_gain=-Math.round(1000/elo);
+  }
+  return {stars_gain,crowns_gain,xp_gain};
+}
+function applyLocalResult(p,m){
+  if(p.result==='win'){
+    S.crowns=Math.max(0,S.crowns+m.crowns_gain);
+    S.stars=Math.max(0,S.stars+m.stars_gain);
+    S.stats.starsEarned=(S.stats.starsEarned||0)+Math.max(0,m.stars_gain);
+    S.stats.crownsEarned=(S.stats.crownsEarned||0)+Math.max(0,m.crowns_gain);
+    if(p.mode==='offline' && typeof p.bot_index==='number'){
+      S.unlocked=Math.max(S.unlocked, Math.min(BOTS.length, p.bot_index+2));
+      S.stats.botWins[p.bot_index]=(S.stats.botWins[p.bot_index]||0)+1;
+    }
+  } else if(p.result==='lose'){
+    S.crowns=Math.max(0,S.crowns+m.crowns_gain);
+  }
+  S.stats.gamesPlayed=(S.stats.gamesPlayed||0)+1;
+  if(p.result==='win'){ S.stats.wins=(S.stats.wins||0)+1; if(p.reason==='Мат') S.stats.matesDelivered=(S.stats.matesDelivered||0)+1; }
+  else if(p.result==='lose') S.stats.losses=(S.stats.losses||0)+1;
+  else S.stats.draws=(S.stats.draws||0)+1;
+  const dd=localDaily();
+  dd.games=(Number(dd.games)||0)+1;
+  if(p.result==='win') dd.wins=(Number(dd.wins)||0)+1;
+  dd.captures=(Number(dd.captures)||0)+(Number(p.actions&&p.actions.captures)||0);
+  updateQuestDot();
+  save();
+  if(p.result==='win'){ SFX.win(); confetti(); buzz([30,40,30]); }
+  else if(p.result==='lose') SFX.lose();
+  else SFX.click();
+  let xpGain=0;
+  if(p.result==='win'){ xpGain=m.xp_gain; gainXp(xpGain); }
+  checkAchievements();
+  showResultModal(p.result,G.resultText,{mode:p.mode,elo:p.elo,stars_gain:m.stars_gain,
+    crowns_gain:m.crowns_gain,xp_gain:xpGain});
+}
+function copyText(txt){
+  const done=()=>toast('Скопировано в буфер');
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt));
+      return;
+    }
+  }catch(e){}
+  fallbackCopy(txt);
+  function fallbackCopy(s){
+    const ta=document.createElement('textarea');
+    ta.value=s; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{document.execCommand('copy');done();}catch(e){toast('Не удалось скопировать');}
+    ta.remove();
+  }
+}
+function shareResult(result,text,v){
+  const title=result==='win'?'Победа в Chez!':result==='lose'?'Партия в Chez!':'Ничья в Chez!';
+  const lines=[title+(text?' · '+text:'')];
+  if(v.opponent) lines.push('Соперник: '+v.opponent);
+  else if(v.elo) lines.push('Бот '+v.elo+' ELO');
+  if(v.stars_gain) lines.push('+'+v.stars_gain+'★');
+  if(v.rating_after&&v.rating_delta!==undefined) lines.push('Рейтинг: '+v.rating_after);
+  if(v.crowns_gain) lines.push('Короны: '+(v.crowns_gain>0?'+':'')+v.crowns_gain);
+  lines.push('Играй в Chez! ♟️');
+  const s=lines.join('\n');
+  if(navigator.share){ navigator.share({title:'Chez!',text:s}).catch(()=>{}); return; }
+  copyText(s);
+}
+function showResultModal(result,text,v){
+  const title=result==='win'?t('win'):result==='lose'?t('lose'):t('draw');
+  const rows=[];
+  if(v.opponent) rows.push(`Соперник: <b>${esc(v.opponent)}</b>`);
+  else if(v.elo) rows.push(`Соперник: бот ${v.elo} ELO`);
+  if(result==='win'&&v.stars_gain) rows.push(`Звёзды: <b style="color:var(--accent)">+${fmt(v.stars_gain)}</b>`);
+  if(v.crowns_gain) rows.push(`Короны: <b style="color:${v.crowns_gain>=0?'var(--accent)':'#e06a6a'}">${v.crowns_gain>0?'+':''}${v.crowns_gain}</b>`);
+  if(v.xp_gain) rows.push(`Опыт: <b style="color:var(--accent)">+${v.xp_gain} XP</b>`);
+  if(v.rating_delta!==undefined&&v.rating_delta!==null&&v.rating_after!==undefined)
+    rows.push(`Рейтинг: <b>${v.rating_before}</b> → <b style="color:${v.rating_delta>=0?'var(--accent)':'#e06a6a'}">${v.rating_after}</b>`);
+  rows.push(`Всего: ★ <b>${fmt(v.totalStars!=null?v.totalStars:S.stars)}</b> · ♛ <b>${fmt(v.totalCrowns!=null?v.totalCrowns:S.crowns)}</b>`);
+  const actions=v.mode==='online'
+    ? [{label:'Поделиться',onClick:()=>shareResult(result,text,v)},
+       {label:'В лобби',primary:true,onClick:()=>{closeModal();openLobby();}},
+       {label:'В меню',onClick:()=>{closeModal();stopDemo();startDemo();}}]
+    : [{label:'Поделиться',onClick:()=>shareResult(result,text,v)},
+       {label:'Ещё раз',onClick:()=>{closeModal();const bi=(G&&G.botIndex!==undefined)?G.botIndex:0;startOfflineGame(bi);}},
+       {label:t('save'),onClick:()=>{closeModal();openSaveDialog();}},
+       {label:'В меню',primary:true,onClick:()=>{closeModal();stopDemo();startDemo();}}];
+  showModal(title,
+    `<div style="font-size:14px;font-weight:700;margin-bottom:6px">${esc(text||'')}</div>
+     <div style="color:var(--muted);line-height:1.9">${rows.join('<br>')}</div>`,actions);
+}
+async function submitGameResult(p){
+  const res=await rpc('record_game_result',{
+    p_mode:p.mode,p_result:p.result,p_reason:p.reason||'',
+    p_bot_index:p.bot_index,p_elo:p.elo,p_quality:p.quality||{},p_moves:p.moves||0,
+    p_actions:p.actions||{}});
+  if(res.error){
+    toast('Сервер недоступен: '+res.error);
+    if(p.mode==='online'){
+      const before=Number(S.rating)||1000;
+      let delta=p.result==='win'?20:p.result==='lose'?-16:2;
+      if(isPremium()){
+        if(delta>0) delta=Math.round(delta*1.5);
+        else if(delta<0) delta=-Math.round(Math.abs(delta)/1.25);
+      }
+      const after=Math.max(100,Math.round(before+delta));
+      const stars=p.result==='win'?60:p.result==='draw'?25:10;
+      const xp=p.result==='win'?30:p.result==='draw'?15:8;
+      S.rating=after;
+      S.stars=(S.stars||0)+stars;
+      S.stats.starsEarned=(S.stats.starsEarned||0)+stars;
+      S.stats.gamesPlayed=(S.stats.gamesPlayed||0)+1;
+      if(p.result==='win') S.stats.wins=(S.stats.wins||0)+1;
+      else if(p.result==='lose') S.stats.losses=(S.stats.losses||0)+1;
+      else S.stats.draws=(S.stats.draws||0)+1;
+      gainXp(xp); save();
+      showResultModal(p.result,G.resultText,{mode:'online',opponent:G.oppName,stars_gain:stars,
+        xp_gain:xp,rating_delta:delta,rating_before:before,rating_after:after});
+      if(p.result==='win'){ SFX.win(); confetti(); } else if(p.result==='lose') SFX.lose(); else SFX.click();
+      return;
+    }
+    applyLocalResult(p,localGameMath(p));
+    return;
+  }
+  const d=res.data;
+  applyServerProfile(d.profile);
+  (d.new_achievements||[]).forEach(a=>{
+    if(a&&a.name) toast(`Достижение: ${a.name}${a.reward?' (+'+a.reward+'★)':''}`);
+  });
+  if((d.new_achievements||[]).length){ SFX.win(); buzz([20,30,20]); confetti(); }
+  (d.new_mastery||[]).forEach(m=>{
+    if(m&&m.stars) toast(`Мастерство: ур.${m.level} · ${m.name} (+${m.stars}★)`);
+  });
+  showResultModal(p.result,G.resultText,{mode:p.mode,opponent:p.opponent,elo:p.elo,
+    stars_gain:d.stars_gain,crowns_gain:d.crowns_gain,xp_gain:d.xp_gain,
+    rating_delta:d.rating_delta,
+    rating_before:(d.rating_delta?Number(d.rating)-Number(d.rating_delta):p.rating_before),
+    rating_after:d.rating,
+    totalStars:d.stars,totalCrowns:d.crowns});
+  if(p.result==='win'){ SFX.win(); confetti(); buzz([30,40,30]); }
+  else if(p.result==='lose') SFX.lose();
+  else SFX.click();
+}
 function finishGame(result,reason){
   if(!G||(G.over&&G.finished)) return;
   if(G.lesson){ finishLesson(result!=='lose'); return; }
@@ -1752,57 +2225,12 @@ function finishGame(result,reason){
   G.resultText=(result==='win'?t('win'):result==='lose'?t('lose'):t('draw'))+(reason?' · '+reason:'');
   if(G.mode==='online'){ finishOnlineGame(result,reason); return; }
 
-  let starsGain=0, crownGain=0;
-  const elo=G.botElo||100;
-  const q=G.quality||{};
-  if(result==='win'){
-    let gain=elo+(q['!!']||0)*100+(q['★']||0)*25+(q['!']||0)*10
-             -((q['?']||0)+(q['??']||0))*15-(q['']||0)*30;
-    gain=Math.max(elo/2, Math.round(gain));
-    starsGain=gain;
-    crownGain=Math.round(elo/100);
-    S.crowns=Math.max(0,S.crowns+crownGain);
-    S.stars=Math.max(0,S.stars+starsGain);
-    S.stats.starsEarned=(S.stats.starsEarned||0)+Math.max(0,starsGain);
-    S.stats.crownsEarned=(S.stats.crownsEarned||0)+Math.max(0,crownGain);
-    if(G.mode==='offline' && typeof G.botIndex==='number'){
-      S.unlocked=Math.max(S.unlocked, Math.min(BOTS.length, G.botIndex+2));
-      S.stats.botWins[G.botIndex]=(S.stats.botWins[G.botIndex]||0)+1;
-    }
-  } else if(result==='lose'){
-    crownGain=-Math.round(1000/elo);
-    S.crowns=Math.max(0,S.crowns+crownGain);
-  }
-  S.stats.gamesPlayed=(S.stats.gamesPlayed||0)+1;
-  if(result==='win'){ S.stats.wins=(S.stats.wins||0)+1; if(reason==='Мат') S.stats.matesDelivered=(S.stats.matesDelivered||0)+1; }
-  else if(result==='lose') S.stats.losses=(S.stats.losses||0)+1;
-  else S.stats.draws=(S.stats.draws||0)+1;
-  save();
-  if(result==='win') SFX.win(); else if(result==='lose') SFX.lose(); else SFX.click();
-
-  let xpGain=0;
-  if(result==='win'){
-    const eloPlayer=S.playerElo||100;
-    xpGain=Math.max(1, Math.round(starsGain*10/eloPlayer));
-    gainXp(xpGain);
-  }
-  checkAchievements();
-
-  showModal(result==='win'?t('win'):result==='lose'?t('lose'):t('draw'),
-    `<div style="font-size:14px;font-weight:700;margin-bottom:6px">${G.resultText}</div>
-     <div style="color:var(--muted);line-height:1.9">
-       Соперник: бот ${G.botElo} ELO<br>
-       ${result==='win'?`Звёзды: <b style="color:var(--accent)">+${fmt(starsGain)}</b><br>`:''}
-       ${result==='win'?`Короны: <b style="color:var(--accent)">+${crownGain}</b><br>`:''}
-       ${result==='win'&&xpGain>0?`Опыт: <b style="color:var(--accent)">+${xpGain} XP</b><br>`:''}
-       ${result==='lose'?`Короны: <b style="color:#e06a6a">${crownGain}</b><br>`:''}
-       Всего звёзд: <b>${fmt(S.stars)}</b> · корон: <b>${fmt(S.crowns)}</b>
-     </div>`,
-    [
-      {label:'Ещё раз',onClick:()=>{closeModal(); startOfflineGame(G.botIndex!==undefined?G.botIndex:0);}},
-      {label:t('save'),onClick:()=>{closeModal(); openSaveDialog();}},
-      {label:'В меню',primary:true,onClick:()=>{closeModal(); stopDemo(); startDemo();}}
-    ]);
+  const payload={mode:G.mode,result,reason:reason||'',
+    bot_index:(typeof G.botIndex==='number'?G.botIndex:null),
+    elo:G.botElo||100,quality:Object.assign({},G.quality),moves:G.history.length,
+    actions:Object.assign({captures:0,castles:0,promotions:0,enPassant:0},G.actions||{})};
+  if(isOnlineUser()) submitGameResult(payload);
+  else applyLocalResult(payload,localGameMath(payload));
 }
 function finishLesson(win){
   if(!G||!G.lesson) return;
@@ -1825,13 +2253,32 @@ function finishLesson(win){
     ]);
 }
 function completeLesson(section,i){
-  if(!S.lessons[section].includes(i)){
-    S.lessons[section].push(i);
-    S.lessons[section].sort((a,b)=>a-b);
-    save();
-    checkAchievements();
-    toast('Этап пройден!');
+  if(S.lessons[section].includes(i)) return;
+  if(isOnlineUser()){
+    rpc('complete_lesson',{p_section:section,p_index:i}).then(res=>{
+      if(res.error){ localCompleteLesson(section,i); return; }
+      if(res.data){
+        if(res.data.profile) applyServerProfile(res.data.profile);
+        const na=(res.data.new_achievements||[]);
+        na.forEach(a=>toast(`Достижение: ${a.name} (+${a.reward}★)`));
+        if(na.length){ SFX.win(); confetti(); }
+        toast('Этап пройден!'+(res.data.stars?` +${res.data.stars}★`:''));
+      }
+    });
+  } else {
+    localCompleteLesson(section,i);
   }
+}
+function localCompleteLesson(section,i){
+  if(S.lessons[section].includes(i)) return;
+  S.lessons[section].push(i);
+  S.lessons[section].sort((a,b)=>a-b);
+  S.stars=(S.stars||0)+25;
+  S.stats.starsEarned=(S.stats.starsEarned||0)+25;
+  save();
+  gainXp(10);
+  checkAchievements();
+  toast('Этап пройден! +25★');
 }
 
 /* ================= SAVE TXT ================= */
@@ -2237,9 +2684,18 @@ function openBotSelect(){
     </div>`;
   });
   html+=`<div style="font-size:11px;color:var(--muted);margin-top:6px">Побеждайте ботов по порядку.</div>`;
+  html+=`<div class="listRow" data-random="1" style="margin-top:8px">
+    <div class="nm">🎲 Случайный бот<div class="sub">Противник из уже открытых</div></div>
+    <span class="badge">играть</span>
+  </div>`;
   const p=showModal('Офлайн · выбор бота', html, []);
   p.querySelectorAll('.listRow').forEach(row=>{
     row.onclick=()=>{
+      if(row.dataset.random){
+        const pool=Math.max(1,Math.min(S.unlocked,BOTS.length));
+        SFX.click(); closeModal(); startOfflineGame(Math.floor(Math.random()*pool));
+        return;
+      }
       const i=+row.dataset.i;
       if(i>=S.unlocked){SFX.error();toast('Сначала победите предыдущего бота');return;}
       SFX.click(); closeModal(); startOfflineGame(i);
@@ -2330,10 +2786,10 @@ function openShop(tab){
         if(invList.includes(it.id)){
           if(!supabase || !currentUser) { toast('Войдите в аккаунт'); return; }
           
-          const res = await supabase.rpc('equip_item', { p_item_id: it.id, p_type: eqKey });
-          if(res.error || res.data.error){
+          const res = await supabase.rpc('equip_item', { p_item_id: it.id, p_type: kind });
+          if(res.error || (res.data&&res.data.error)){
             SFX.error();
-            toast('Ошибка сервера: ' + (res.error?.message || res.data.error));
+            toast(res.error ? ('Ошибка сервера: '+(res.error.message||res.error)) : rpcErrorText(res.data.error));
             return;
           }
           S.equipped[eqKey] = it.id;
@@ -2348,21 +2804,24 @@ function openShop(tab){
           
           const res = await supabase.rpc('buy_item', { p_item_id: it.id, p_type: kind });
           
-          if(res.error || res.data.error){
+          if(res.error || (res.data&&res.data.error)){
             SFX.error(); 
-            toast('Ошибка: ' + (res.error?.message || res.data.error)); 
+            toast(res.error ? ('Ошибка: '+(res.error.message||res.error)) : rpcErrorText(res.data.error));
             return;
           }
           
-          S.stars = res.data.new_stars;
-          if(kind === 'frames') S.inventory.frames = res.data.new_inventory.frames;
-          if(kind === 'prefixes') S.inventory.prefixes = res.data.new_inventory.prefixes;
+          if(res.data.profile) applyServerProfile(res.data.profile);
+          else {
+            S.stars = res.data.new_stars;
+            if(kind === 'frames') S.inventory.frames = res.data.new_inventory.frames;
+            if(kind === 'prefixes') S.inventory.prefixes = res.data.new_inventory.prefixes;
+          }
           
           S.equipped[eqKey] = it.id;
           S.purchases=(S.purchases||0)+1;
           S.stats.purchases=(S.stats.purchases||0)+1;
           
-          saveLocal(); checkAchievements(); SFX.capture();
+          saveLocal(); checkAchievements(); SFX.capture(); buzz(30);
           toast('Куплено: ' + it.name);
           p.querySelector('.modal-body').innerHTML=render(); bind();
           setAccountName(S.username);
@@ -2388,6 +2847,7 @@ function openSettings(tab){
         <div class="setRow" style="flex-direction:column;align-items:flex-start;gap:6px">
           <span>Тема доски</span>
           <div class="theme-grid">${boardSwatches}</div>
+          <button class="btn" id="btnRandBoard" style="margin-top:2px">🎲 Случайная тема</button>
         </div>
         <div class="setRow" style="margin-top:10px"><span>Цвет белых фигур</span>
           <input type="color" id="selColorW" value="${S.settings.pieceColorW}"></div>
@@ -2400,7 +2860,10 @@ function openSettings(tab){
             <option value="contrast" ${S.settings.theme==='contrast'?'selected':''}>Контраст</option>
           </select></div>
         <div class="setRow"><span>Акцентный цвет</span>
-          <input type="color" id="selAccent" value="${S.settings.accent}"></div>`;
+          <input type="color" id="selAccent" value="${S.settings.accent}"></div>
+        <div class="setRow" style="flex-direction:column;align-items:flex-start;gap:6px"><span>Готовые акценты</span>
+          <div class="accentRow">${['#7cd4a3','#5ba8ff','#ff7cc3','#ffd84d','#ff6b6b','#b47cff','#00e0c6','#ff9f43'].map(c=>`<div class="accentDot ${S.settings.accent===c?'on':''}" data-c="${c}" style="background:${c}"></div>`).join('')}</div>
+        </div>`;
     } else if(tab==='lang'){
       body=`
         <div class="setRow"><span>Язык игры</span>
@@ -2421,7 +2884,19 @@ function openSettings(tab){
         <div class="setRow"><span>Оценка ходов (значки)</span>${sw('showQuality',S.settings.showQuality)}</div>
         <div class="setRow"><span>Подсказки возможных ходов</span>${sw('hints',S.settings.hints)}</div>
         <div class="setRow"><span>Анимации</span>${sw('animations',S.settings.animations)}</div>
-        <div class="setRow"><span>Звуки</span>${sw('sound',S.settings.sound)}</div>`;
+        <div class="setRow"><span>Звуки</span>${sw('sound',S.settings.sound)}</div>
+        <div class="setRow"><span>Вибрация</span>${sw('haptics',S.settings.haptics!==false)}</div>
+        <div class="setRow"><span>Доска</span>
+          <button class="btn" id="btnFlip">Перевернуть ⇅</button></div>
+        <div class="setRow" style="flex-direction:column;align-items:flex-start;gap:8px">
+          <span>Прогресс</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn" id="btnExport">Экспорт</button>
+            <button class="btn" id="btnImport">Импорт</button>
+            <button class="btn" id="btnReset" style="color:#e06a6a">Сбросить</button>
+          </div>
+          <input type="file" id="impFile" accept="application/json,.json" style="display:none">
+        </div>`;
     }
     return `<div class="tabs">
       <button class="tab ${tab==='cust'?'on':''}" data-tab="cust">Кастомизация</button>
@@ -2447,6 +2922,22 @@ function openSettings(tab){
           sl=p.querySelector('#selLang'),stl=p.querySelector('#selTLang');
     if(st) st.onchange=()=>{S.settings.theme=st.value;save();applySettings();};
     if(sa) sa.oninput=()=>{S.settings.accent=sa.value;save();applySettings();};
+    p.querySelectorAll('.accentDot').forEach(d=>d.onclick=()=>{
+      S.settings.accent=d.dataset.c; save(); applySettings(); SFX.click(); refresh();
+    });
+    const rb=p.querySelector('#btnRandBoard');
+    if(rb) rb.onclick=()=>{
+      let i=Math.floor(Math.random()*BOARD_SKINS.length);
+      if(BOARD_SKINS.length>1&&i===S.equipped.board) i=(i+1)%BOARD_SKINS.length;
+      S.equipped.board=i; save(); applySettings(); SFX.click();
+      toast('Тема доски: '+(BOARD_SKINS[i]&&BOARD_SKINS[i].name||i)); refresh();
+    };
+    const bf=p.querySelector('#btnFlip'); if(bf) bf.onclick=()=>flipBoard();
+    const be=p.querySelector('#btnExport'); if(be) be.onclick=exportProgress;
+    const bimp=p.querySelector('#btnImport'), fi=p.querySelector('#impFile');
+    if(bimp&&fi) bimp.onclick=()=>fi.click();
+    if(fi) fi.onchange=()=>{const f=fi.files&&fi.files[0]; if(f) importProgress(f);};
+    const br=p.querySelector('#btnReset'); if(br) br.onclick=resetProgress;
     if(sl) sl.onchange=()=>{S.settings.lang=sl.value;LANG=sl.value;save();applyI18N();};
     if(stl) stl.onchange=()=>{S.settings.trainerLang=stl.value;save();};
     
@@ -2649,11 +3140,16 @@ const ICON_SVG={
   leaderboard:'<svg viewBox="0 0 24 24"><path d="M12 2l2.4 5.2 5.6.7-4.1 3.9 1.1 5.6L12 14.8 6.9 17.4 8 11.8 3.9 7.9l5.6-.7L12 2z"/></svg>',
   mod:'<svg viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5l8-3zm-1 13l5-5-1.4-1.4L11 12.2 8.4 9.6 7 11l4 4z"/></svg>',
   account:'<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>',
-  help:'<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26A1.99 1.99 0 0 0 12 7a2 2 0 0 0-2 2H8a4 4 0 1 1 8 0c0 .88-.36 1.68-.93 2.25z"/></svg>'
+  help:'<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26A1.99 1.99 0 0 0 12 7a2 2 0 0 0-2 2H8a4 4 0 1 1 8 0c0 .88-.36 1.68-.93 2.25z"/></svg>',
+  daily:'<svg viewBox="0 0 24 24"><path d="M20 7h-2.2a3 3 0 1 0-5.8-1 3 3 0 1 0-5.8 1H4a2 2 0 0 0-2 2v3h20V9a2 2 0 0 0-2-2zM2 14v6a2 2 0 0 0 2 2h7v-8H2zm9 8h7a2 2 0 0 0 2-2v-6h-9v8z"/></svg>',
+  quests:'<svg viewBox="0 0 24 24"><path d="M4 4h2v2H4V4zm4 0h12v2H8V4zM4 11h2v2H4v-2zm4 0h12v2H8v-2zM4 18h2v2H4v-2zm4 0h12v2H8v-2z"/></svg>',
+  install:'<svg viewBox="0 0 24 24"><path d="M11 3h2v9l3-3 1.4 1.4L12 15.8 6.6 10.4 8 9l3 3V3zM5 19h14v2H5v-2z"/></svg>'
 };
 function openMoreMenu(){
   const item=(act,label)=>`<div class="more-item" data-act="${act}">${ICON_SVG[act]}<span class="lbl">${label}</span></div>`;
   const html=`<div class="more-grid">
+    ${item('quests','Задания')}
+    ${item('daily','Бонус дня')}
     ${item('account','Аккаунт')}
     ${item('settings','Настройки')}
     ${item('shop','Магазин')}
@@ -2662,6 +3158,7 @@ function openMoreMenu(){
     ${item('mastery','Мастерство')}
     ${item('stats','Статистика')}
     ${item('leaderboard','Лидеры')}
+    ${item('install','Установить')}
     ${item('help','Помощь')}
     ${S.is_mod?item('mod','Модерация'):''}
   </div>`;
@@ -2679,6 +3176,9 @@ function openMoreMenu(){
       else if(a==='account') openAccountModal();
       else if(a==='leaderboard') openLeaderboard();
       else if(a==='mod') openModPanel();
+      else if(a==='daily') claimDaily();
+      else if(a==='quests') openQuests();
+      else if(a==='install') installApp();
       else if(a==='help') openHelp();
     };
   });
@@ -2691,12 +3191,16 @@ function openHelp(){
       <p>Основы → Дебюты → Маты. Этапы открываются по порядку. За каждый пройденный — звёзды и XP.</p></div>
     <div class="help-sec"><h4>🏆 Мастерство</h4>
       <p>XP капает за победы. Открываются новые рамки и звёзды.</p></div>
+    <div class="help-sec"><h4>🎯 Ежедневные задания</h4>
+      <p>Каждый день — три задания (партии, победы, взятия). Прогресс и награды считает сервер, сброс в 00:00 UTC. Рядом — бонус дня со стриком.</p></div>
+    <div class="help-sec"><h4>📱 Приложение</h4>
+      <p>В портретной ориентации включается мобильный интерфейс. Через меню браузера игру можно установить на телефон — она работает офлайн.</p></div>
     <div class="help-sec"><h4>💎 Premium</h4>
       <p>Даёт: градиент ника, эксклюзивные рамки/префиксы, +50% к росту ELO, −20% к падению ELO. Выдаётся модератором по нику.</p></div>
     <div class="help-sec"><h4>🛡️ Модерация</h4>
       <p>Первый модер назначается через SQL или в Table Editor Supabase. Дальше модеры выдают модерку и Premium прямо в игре по нику.</p></div>
     <div class="help-sec"><h4>⌨️ Горячие клавиши</h4>
-      <p><b>F</b> — на весь экран · <b>Esc</b> — закрыть окно</p></div>`;
+      <p><b>F</b> — на весь экран · <b>B</b> — перевернуть доску · <b>Q</b> — задания · <b>Esc</b> — закрыть окно</p></div>`;
   showModal('Помощь', html, [{label:'Закрыть',primary:true,onClick:closeModal}],true);
 }
 
@@ -2894,6 +3398,73 @@ function applyI18N(){
   LANG=S.settings.lang;
   $$('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n);});
 }
+function exportProgress(){
+  try{
+    const data=JSON.stringify({app:'chez',version:1.1,exportedAt:new Date().toISOString(),save:S},null,2);
+    const blob=new Blob([data],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='chez-progress-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+    toast('Прогресс экспортирован');
+  }catch(e){ toast('Не удалось экспортировать'); SFX.error(); }
+}
+function importProgress(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const raw=JSON.parse(r.result);
+      const src=raw&&raw.save?raw.save:raw;
+      if(!src||typeof src!=='object') throw new Error('bad');
+      showModal('Импорт прогресса',
+        '<div style="font-size:13px;line-height:1.7;color:var(--muted)">Текущий локальный прогресс будет заменён данными из файла. Аккаунт на сервере не изменится.</div>',
+        [{label:'Отмена',primary:true,onClick:closeModal},
+         {label:'Импортировать',onClick:()=>{
+           try{localStorage.setItem(SAVE_KEY,JSON.stringify(src));}catch(e){}
+           location.reload();
+         }}]);
+    }catch(e){ toast('Некорректный файл'); SFX.error(); }
+  };
+  r.readAsText(file);
+}
+function resetProgress(){
+  showModal('Сбросить прогресс?',
+    '<div style="font-size:13px;line-height:1.7;color:var(--muted)">Весь локальный прогресс, покупки и настройки будут удалены. Серверный аккаунт не изменится.</div>',
+    [{label:'Отмена',primary:true,onClick:closeModal},
+     {label:'Сбросить',onClick:()=>{
+       try{
+         localStorage.removeItem(SAVE_KEY);
+         LEGACY_SAVE_KEYS.forEach(k=>localStorage.removeItem(k));
+       }catch(e){}
+       location.reload();
+     }}]);
+}
+function updateNetDot(){
+  const el=document.getElementById('netDot');
+  if(!el) return;
+  const ok=navigator.onLine!==false;
+  el.classList.toggle('off',!ok);
+  el.title=ok?'Сеть в порядке':'Нет сети';
+  el.textContent=ok?'●':'○';
+}
+async function installApp(){
+  if(deferredInstall){
+    try{
+      deferredInstall.prompt();
+      const r=await deferredInstall.userChoice;
+      toast(r&&r.outcome==='accepted'?'Устанавливаем Chez!…':'Установка отменена');
+    }catch(e){ toast('Не удалось запустить установку'); }
+    deferredInstall=null;
+    return;
+  }
+  showModal('Установить Chez!',
+    `<div style="font-size:13px;line-height:1.7;color:var(--muted)">
+       Открой меню браузера и выбери <b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b>.
+       После установки игра запускается без адресной строки и работает офлайн.
+     </div>`,
+    [{label:'Понятно',primary:true,onClick:closeModal}]);
+}
 
 /* ================= ONLINE ================= */
 function emailFor(u){
@@ -2905,48 +3476,22 @@ async function restoreSession(session){
   if(!supabase||!session||!session.user) return;
   try{
     const {data:profile,error}=await supabase.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
-    if(profile){syncProfile(profile);return;}
+    if(profile){ applyServerProfile(profile); currentUser=profile; isOnline=true; return; }
     const fallbackName=S.username||(session.user.email||'').split('@')[0]||('Игрок'+Math.floor(1000+Math.random()*9000));
-    currentUser={id:session.user.id,username:fallbackName,rating:Number(S.rating)||1000,stars:S.stars||0,xp:S.xp||0};
-    isOnline=true; S.username=fallbackName; setAccountName(fallbackName);
-    const np={id:session.user.id,username:fallbackName,rating:Number(S.rating)||1000,
-      stars:S.stars||0,xp:S.xp||0};
-    const img=safeImgUrl(S.avatar_url);
-    if(img)np.avatar_url=img;
-    if(profileWritable){
-      const r=await supabase.from('profiles').upsert(np,{onConflict:'id'});
-      if(!r.error) syncProfile(np);
-      else if(r.error.code==='42501') profileWritable=false;
+    const res=await rpc('register_profile',{p_username:fallbackName});
+    if(!res.error&&res.data&&res.data.profile){
+      applyServerProfile(res.data.profile);
+      currentUser=res.data.profile; isOnline=true;
+    } else {
+      currentUser={id:session.user.id,username:fallbackName,rating:Number(S.rating)||1000,stars:S.stars||0,xp:S.xp||0};
+      isOnline=true; S.username=fallbackName; setAccountName(fallbackName); save();
     }
   }catch(e){}
 }
 function syncProfile(p){
   if(!p) return;
+  applyServerProfile(p);
   currentUser=p; isOnline=true;
-  S.username=p.username||S.username||'';
-  S.rating=Number(p.rating)||S.rating||1000;
-  S.xp=Number(p.xp)||S.xp||0;
-  S.stars=Number(p.stars)||S.stars||0;
-  
-  if(p.inventory){
-    if(p.inventory.frames) S.inventory.frames = p.inventory.frames;
-    if(p.inventory.prefixes) S.inventory.prefixes = p.inventory.prefixes;
-  }
-  if(p.equipped){
-    if(p.equipped.frame !== undefined) S.equipped.frame = p.equipped.frame;
-    if(p.equipped.prefix !== undefined) S.equipped.prefix = p.equipped.prefix;
-  }
-  if(p.stats && typeof p.stats === 'object'){
-    S.stats = Object.assign({}, S.stats, p.stats);
-  }
-  
-  S.is_mod=!!p.is_mod; S.is_banned=!!p.is_banned;
-  S.is_premium=!!p.is_premium;
-  S.avatar_url=safeImgUrl(p.avatar_url)||S.avatar_url;
-  
-  setAccountName(S.username);
-  saveLocal();
-  if(G)updateGameUI();
 }
 async function openAccountModal(){
   if(!supabase){toast('Онлайн ещё загружается…');loadSupabase();return;}
@@ -3001,8 +3546,8 @@ async function openAccountModal(){
       reader.onload=async ev=>{
         const url=safeImgUrl(ev.target.result);
         if(!url)return toast('Неподдерживаемый формат');
-        const {error}=await supabase.from('profiles').update({pending_avatar:url}).eq('id',currentUser.id);
-        toast(error?'Не удалось отправить':'Аватар отправлен на проверку');
+        const r=await rpc('submit_avatar',{p_url:url});
+        toast(r.error?'Не удалось отправить: '+r.error:'Аватар отправлен на проверку');
       };
       reader.readAsDataURL(file);
     };
@@ -3024,10 +3569,16 @@ async function openAccountModal(){
       if(error){msg.style.color='#e06a6a';msg.textContent='Ошибка: '+error.message;return;}
       const {data:pData}=await supabase.from('profiles').select('*').eq('id',data.user.id).maybeSingle();
       if(pData&&pData.is_banned){msg.style.color='#e06a6a';msg.textContent='Аккаунт заблокирован';return;}
-      if(pData)syncProfile(pData);
+      if(pData) syncProfile(pData);
       else{
-        currentUser={id:data.user.id,username:u,rating:Number(S.rating)||1000,stars:S.stars||0,xp:S.xp||0};
-        isOnline=true;S.username=u;setAccountName(u);
+        const res=await rpc('register_profile',{p_username:u});
+        if(!res.error&&res.data&&res.data.profile){
+          applyServerProfile(res.data.profile);
+          currentUser=res.data.profile; isOnline=true;
+        } else {
+          currentUser={id:data.user.id,username:u,rating:Number(S.rating)||1000,stars:S.stars||0,xp:S.xp||0};
+          isOnline=true;S.username=u;setAccountName(u);
+        }
       }
       msg.style.color='#7cd4a3';msg.textContent='Вы вошли!';
       setTimeout(closeModal,400);
@@ -3045,17 +3596,14 @@ async function openAccountModal(){
         msg.style.color='#ffd84d';msg.textContent='Аккаунт создан. Подтвердите почту и войдите.';
         return;
       }
-      const np={id:data.user.id,username:u,rating:Number(S.rating)||1000,
-        stars:S.stars||0,xp:S.xp||0,is_premium:false,is_mod:false,
-        inventory:{frames:[""],prefixes:[""]}, equipped:{frame:"",prefix:""}, stats:{}};
-      const ins=await supabase.from('profiles').upsert(np,{onConflict:'id'});
-      if(ins.error){
-        if(ins.error.code==='42501')profileWritable=false;
-        currentUser={id:data.user.id,username:u,rating:Number(S.rating)||1000,stars:S.stars||0,xp:S.xp||0};
-        isOnline=true;S.username=u;setAccountName(u);
+      const res=await rpc('register_profile',{p_username:u});
+      if(!res.error&&res.data&&res.data.profile){
+        applyServerProfile(res.data.profile);
+        currentUser=res.data.profile; isOnline=true;
         msg.style.color='#7cd4a3';msg.textContent='Аккаунт создан!';
       } else {
-        syncProfile(np);
+        currentUser={id:data.user.id,username:u,rating:Number(S.rating)||1000,stars:S.stars||0,xp:S.xp||0};
+        isOnline=true;S.username=u;setAccountName(u);
         msg.style.color='#7cd4a3';msg.textContent='Аккаунт создан!';
       }
       setTimeout(closeModal,600);
@@ -3273,37 +3821,11 @@ function finishOnlineGame(result,reason){
   if(clockTimer){clearInterval(clockTimer);clockTimer=null;}
   updateClocks();
   const before=Number(S.rating)||1000;
-  let delta=result==='win'?20:result==='lose'?-16:2;
-  if(isPremium()){
-    if(delta>0) delta=Math.round(delta*1.5);
-    else if(delta<0) delta=-Math.round(Math.abs(delta)/1.25);
-  }
-  S.rating=Math.max(100,Math.round(before+delta));
-  S.stats.gamesPlayed=(S.stats.gamesPlayed||0)+1;
-  if(result==='win'){S.stats.wins=(S.stats.wins||0)+1;if(reason==='Мат')S.stats.matesDelivered=(S.stats.matesDelivered||0)+1;}
-  else if(result==='lose')S.stats.losses=(S.stats.losses||0)+1;
-  else S.stats.draws=(S.stats.draws||0)+1;
-  const stars=result==='win'?60:result==='draw'?25:10;
-  S.stars=(S.stars||0)+stars;
-  S.stats.starsEarned=(S.stats.starsEarned||0)+stars;
-  const xp=result==='win'?30:result==='draw'?15:8;
-  gainXp(xp);
-  save();checkAchievements();
   sendOnlineFinish();
-  const title=result==='win'?t('win'):result==='lose'?t('lose'):t('draw');
-  showModal(title,
-    `<div style="font-size:14px;font-weight:700;margin-bottom:6px">${esc(G.resultText||'')}</div>
-     <div style="color:var(--muted);line-height:1.9">
-       Соперник: <b>${esc(G.oppName||'игрок')}</b><br>
-       Рейтинг: <b>${before}</b> → <b style="color:${delta>=0?'var(--accent)':'#e06a6a'}">${S.rating}</b><br>
-       Звёзды: <b style="color:var(--accent)">+${stars}</b><br>
-       Опыт: <b style="color:var(--accent)">+${xp} XP</b>
-     </div>`,
-    [
-      {label:'В лобби',primary:true,onClick:()=>{closeModal();openLobby();}},
-      {label:'В меню',onClick:()=>{closeModal();stopDemo();startDemo();}}
-    ]);
   cleanupOnline();
+  submitGameResult({mode:'online',result,reason:reason||'',bot_index:null,elo:null,
+    quality:Object.assign({},G.quality),moves:G.history.length,actions:{},
+    opponent:G.oppName,rating_before:before});
 }
 window.addEventListener('beforeunload',()=>{
   if(!supabase||!roomCode)return;
@@ -3403,31 +3925,32 @@ async function openModPanel(){
     act('[data-approve]',b=>async()=>{
       const prof=(profiles||[]).find(x=>String(x.id)===b.dataset.approve);
       if(!prof)return;
-      await supabase.from('profiles').update({avatar_url:safeImgUrl(prof.pending_avatar),pending_avatar:null}).eq('id',prof.id);
+      const r=await rpc('mod_avatar_decision',{p_user_id:prof.id,p_approve:true});
+      if(r.error){toast('Ошибка: '+r.error);return;}
       toast('Аватар принят');renderMod();
     });
     act('[data-reject]',b=>async()=>{
-      await supabase.from('profiles').update({pending_avatar:null}).eq('id',b.dataset.reject);
+      const r=await rpc('mod_avatar_decision',{p_user_id:b.dataset.reject,p_approve:false});
+      if(r.error){toast('Ошибка: '+r.error);return;}
       toast('Заявка отклонена');renderMod();
     });
     act('[data-ban]',b=>async()=>{
-      await supabase.from('profiles').update({is_banned:true}).eq('id',b.dataset.ban);
+      const r=await rpc('mod_set_ban',{p_user_id:b.dataset.ban,p_ban:true});
+      if(r.error){toast('Ошибка: '+r.error);return;}
       toast('Забанен');renderMod();
     });
     act('[data-unban]',b=>async()=>{
-      await supabase.from('profiles').update({is_banned:false}).eq('id',b.dataset.unban);
+      const r=await rpc('mod_set_ban',{p_user_id:b.dataset.unban,p_ban:false});
+      if(r.error){toast('Ошибка: '+r.error);return;}
       toast('Разблокирован');renderMod();
     });
     const doGrant=async(field,val)=>{
       const inp=box.querySelector('#modNickInput');
       const nick=(inp&&inp.value||'').trim();
       if(!nick){toast('Введите ник');return;}
-      const {data:found,error}=await supabase.from('profiles').select('id,username').ilike('username',nick).maybeSingle();
-      if(error||!found){toast('Игрок с таким ником не найден');return;}
-      const upd={}; upd[field]=val;
-      const {error:e2}=await supabase.from('profiles').update(upd).eq('id',found.id);
-      if(e2){toast('Ошибка: '+e2.message);return;}
-      toast((field==='is_mod'?'Модерка':'Premium')+' '+(val?'выдан':'снят')+': '+found.username);
+      const r=await rpc('mod_set_role',{p_nick:nick,p_field:field,p_value:val});
+      if(r.error){toast('Ошибка: '+r.error);return;}
+      toast((field==='is_mod'?'Модерка':'Premium')+' '+(val?'выдан':'снят')+': '+(r.data&&r.data.username||nick));
       renderMod();
     };
     box.querySelectorAll('[data-grant]').forEach(b=>b.onclick=()=>{
@@ -3455,7 +3978,17 @@ $$('.mbtn').forEach(b=>{
     else if(act==='account') openAccountModal();
   };
 });
-$('#wnBtn').onclick=()=>{SFX.click();};
+$('#wnBtn').onclick=(e)=>{
+  e.stopPropagation(); SFX.click();
+  const w=document.querySelector('.wnwrap');
+  if(w) w.classList.toggle('open');
+};
+document.addEventListener('pointerdown',e=>{
+  if(!e.target.closest||!e.target.closest('.wnwrap')){
+    const w=document.querySelector('.wnwrap');
+    if(w) w.classList.remove('open');
+  }
+});
 
 /* ================= INIT ================= */
 function init(){
@@ -3465,20 +3998,26 @@ function init(){
   checkAchievements();
   save();
   setAccountName(S.username||'');
+  updateNetDot();
+  updateQuestDot();
   loadSupabase();
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
   document.body.addEventListener('pointerdown',()=>{try{ac();}catch(e){}},{once:true});
   if(!S.seenWelcome){
     S.seenWelcome=true;
     save();
     setTimeout(()=>{
-      showModal('Добро пожаловать в Chez! v1.0 beta',
+      showModal('Добро пожаловать в Chez! v1.1',
         `<div style="line-height:1.7;font-size:12.5px">
           <p><b>Что нового:</b></p>
           <ul style="margin:6px 0 12px;padding-left:18px;color:var(--muted)">
-            <li>Скин фигур теперь векторный (SVG), и вы можете настроить их цвет!</li>
-            <li>Магазин сфокусирован на Рамках и Префиксах за звёзды.</li>
-            <li>Визуальный предпросмотр тем доски в настройках.</li>
-            <li>Модерация теперь работает по никам.</li>
+            <li>Ежедневные задания и бонус дня — заходи каждый день!</li>
+            <li>Мобильный интерфейс для портретной ориентации и установка как приложение.</li>
+            <li>Покупки, звёзды, XP, рейтинг и статистика считаются на сервере.</li>
+            <li>Переворот доски, шаринг результата, экспорт и импорт прогресса.</li>
+            <li>Готовые акценты, случайная тема доски и вибро-отклик.</li>
           </ul>
           <p style="color:var(--muted)">Приятной игры! ♟️</p>
         </div>`,
